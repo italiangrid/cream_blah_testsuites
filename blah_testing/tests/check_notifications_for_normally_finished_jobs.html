@@ -1,0 +1,278 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+td.colspan4, th.colspan4 {
+    width: 48em;
+}
+td.colspan3, th.colspan3 {
+    width: 36em;
+}
+td.colspan2, th.colspan2 {
+    width: 24em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Check Notifications For Normally Finished Jobs</title>
+</head>
+<body>
+<h1>Check Notifications For Normally Finished Jobs</h1>
+<table border="1" id="setting">
+<tr>
+<th class="name" colspan="5">Setting</th>
+</tr>
+<tr>
+<td class="name">Documentation</td>
+<td class="colspan4" colspan="4">Test that notifications are sent for a job which finishes normally.\nIt can be used with both old and new blparser, configuring the right way the testsuite.\n\nSubmit this JDL to a CREAM-CE using the glite-ce-job-submit command:\n\nglite-ce-job-submit -a -r &lt;CEId&gt; test1.jdl\n\ncat test1.jd:\n[\nexecutable="/bin/sleep";\narguments="100";\n]\n\nAfter the job completed its execution (it must be needed to then wait for a couple of minutes), check the log file /var/log/cream/glite-xxxparser.log. For the relevant job there should be:\n\n<br>
+   * A notification with JobStatus=1 (this can be missing)\n<br>
+   * A notification with JobStatus=2 (this can be missing)\n<br>
+   * A notification with JobStatus=4 (this must be there) </td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>Temporary Files Location</td>
+<td>${tmp_dir}</td>
+<td># The directory in which the temporary test suite files will be stored.</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file</td>
+<td>${ce_cream_xml}</td>
+<td># Cream web application configuration file</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file cream-config.xml</td>
+<td>${cream_config_xml}</td>
+<td># CREAM configuration file cream-config.xml</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH configuration parameter cream_concurrency_level</td>
+<td>${blah_cream_concurrency_level}</td>
+<td># BLAH configuration parameter cream_concurrency_level</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH Configuration file name</td>
+<td>${blah_config}</td>
+<td># BLAH Configuration file name</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_testing.py</td>
+<td># This is the main cream testing robot library,implemented as a python module.For more information,check the accompanied html documention (created with pydoc).</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Operating System</td>
+<td># Builtin "Operating System" library,providing keywords for interaction with the system.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Collections</td>
+<td># List and dictionary manipulating library</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Variables</td>
+<td>regression_vars.py</td>
+<td># This is the variables file</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_regression.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>blah_testing.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="testcase">
+<tr>
+<th class="name" colspan="5">Test Case</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Set Log Level">Set Log Level</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Set the log level used for the test suite. This changes the verbosity of the final test suite log files.</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>loglevel</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Log Level</td>
+<td>${log_level}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_check_notifications_for_normally_finished_jobs">check_notifications_for_normally_finished_jobs</a></td>
+<td>Create Proxy</td>
+<td>${proxy_pass}</td>
+<td>${vo}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${jdl_fname}</td>
+<td>Sleep Jdl</td>
+<td>${vo}</td>
+<td>100</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${tmp_dir}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${cream_job_id}</td>
+<td>Submit Job</td>
+<td>${jdl_fname}</td>
+<td>${ce}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Run</td>
+<td>sleep 5</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${final_job_status}</td>
+<td>Get Final Status</td>
+<td>${cream_job_id}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${job_num}</td>
+<td>Get Job Num from Jid</td>
+<td>${cream_job_id}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${blah_parser_log_file_name}</td>
+<td>Get Blah Parser Log File Name</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Run</td>
+<td>sleep 200</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${local_blah_parser_log_file}</td>
+<td>Get File from Ce</td>
+<td>${blah_parser_log_file_name}</td>
+<td>${tmp_dir}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${notifications_list}</td>
+<td>Get Notifications in Blah Parser Log</td>
+<td>${local_blah_parser_log_file}</td>
+<td>${job_num}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${check_result}</td>
+<td>Check Notifications for Normally Finished</td>
+<td>${notifications_list}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should be equal</td>
+<td>${check_result}</td>
+<td>NOTIFICATIONS OK</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

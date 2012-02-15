@@ -1,0 +1,147 @@
+
+[batch_system]
+; The underlying batch system of the CREAM endpoint.Either pbs or lsf.
+batch_sys =
+;
+; The hostname where TORQUE is running. Example: ctb07.gridctb.uoa.gr
+torque_host =
+;
+; A user on the TORQUE host, who has job admin priviledges and ssh access to the machine. Example: root
+torque_admin_user =
+;
+; The aforementioned user's ssh password. Example: p4sSw0rD
+torque_admin_pass =
+;
+batch_master_host =
+;
+batch_master_admin =
+;
+batch_master_admin_password =
+;
+; Total CPU number available in the batch cluster. Needed to know how much job to submit to saturate the batch system
+tot_cpu_num = 
+;
+[submission_info]
+ce_host 
+;
+# The cream endpoint to be used (e.g.: ctb04.gridctb.uoa.gr:8443 )
+ce_endpoint = 
+;
+# The cream queue to be used (e.g.: cream-pbs-see )
+cream_queue = 
+
+# The CREAM endpoint in use for delegation (e.g.: https://ctb04.gridctb.uoa.gr:8443//ce-cream/services/gridsite-delegation )
+deleg_endpoint = 
+
+# The user's submitting the jobs virtual organisation (e.g.: see )
+vo = 
+;
+# Distinguish name of the user performing the tests (e.g.: /C=IT/O=INFN/OU=Personal Certificate/L=Padova/CN=Firstname Secondname")
+dn = 
+;
+# The user's submitting the jobs proxy password (e.g.: p4sSw0rD )
+proxy_pass = 
+
+# Gridftp server used for data transfers (e.g.: se01.isabella.grnet.gr )
+gridftp_server = 
+
+# LFC directory for data transfers. This directory will be created, it doesn't have to allready exist. Example: /grid/dteam/cream_testing
+lfn_dir = 
+;
+# A delegation id string (e.g.: my_deleg_id )
+deleg_id = 
+
+# A directory in the gridftp server.This directory has to allready exist and your vo have write access to it. Used for OSB file storage. Example: /tmp
+gridftp_dir = 
+
+# Path to a second certificate
+sec_cert=""
+
+# Path to a second key
+sec_key=""
+
+# Password for the second certificate
+sec_proxy_pass=""
+;
+;
+[testsuite_behaviour]
+# The path in which temporary files will reside.
+# They will be automatically cleaned up unless you set the variable delete_files to "False" or explicitely don't run the cleanup test case.
+# The path will be created -with its parents-, it doesn't have to exist. You can leave it empty and a temporary directory will be created for you.
+# In order to know which temp random directory is used, it is printed in standard output and in the final test suite report.
+# Warning: any parent directories created, are not removed!
+# All in all, unless needed for specific reasons, you should leave this variable empty.
+tmp_dir = /tmp
+
+# Delete temporary files (jdl and script files created during the test) or not. Possible values: True False. Defaults to "True"
+delete_files = False
+;
+;
+[ce_specific]
+# The cream host's root user's ssh password. Example: p4sSw0rD
+cream_root_pass = 
+cream_root_usr = 
+;
+[logger]
+; logging log level NOTSET, INFO, DEBUG, WARNING, ERROR, CRITICAL
+log_level = DEBUG
+log_file = 
+# The log level used during the test.Default is INFO.For extra output,set to DEBUG or TRACE.
+# (possible values: NONE FAIL WARN INFO DEBUG TRACE)
+robot_framework_log_level = TRACE
+;
+;
+[srv_environment]
+CATALINA_HOME=/var/lib/tomcat5
+GLITE_CREAM_LOCATION_VAR=/var
+;
+;
+[cream-ce_conf_files]
+cream-config.xml = /etc/glite-ce-cream/cream-config.xml
+ce-cream.xml = /etc/tomcat5/Catalina/localhost/ce-cream.xml
+blah.config = /etc/blah.config
+;
+;
+[cream_yaim_conf_files]
+site-info.def = 
+services-glite-creamce = 
+site-info.pre = /opt/glite/yaim/defaults/site-info.pre
+site-info.post = /opt/glite/yaim/defaults/site-info.post
+services-glite-creamce.pre = /opt/glite/yaim/defaults/glite-creamce.pre
+services-glite-creamce.post = /opt/glite/yaim/defaults/glite-creamce.post
+node-file = 
+;
+;
+[blah_parameters]
+blah_cream_concurrency_level = cream_concurrency_level
+blah_bupdater_loop_interval = bupdater_loop_interval
+;
+;
+[cream_db_params]
+creamdb_host = 
+creamdb_port = 3306
+creamdb_user = 
+creamdb_pass = 
+;
+[cream_authorization]
+; authz_model = argus or gjaf
+authz_model = gjaf
+; if authz_model = gjaf then argus_host and argus_root_pass could be null
+argus_host = ""
+argus_root_pass = ""
+;
+;
+[cream_parameters]
+cream_sandbox_path = CREAM_SANDBOX_PATH
+glite_cream_location_var = GLITE_CREAM_LOCATION_VAR
+;
+; ONLY for blah testsuite
+[blah_specific]
+; parser_type could be with_updater_notifier (new style) with_blparser_only (old style)
+parser_type = 
+;
+; parser log file is /var/log/cream/glite-ce-bnotifier.log (new_style) or
+; /var/log/cream/glite-XXXparser.log where XXX  PBS or LSF
+parser_log_file = 
+;
+
