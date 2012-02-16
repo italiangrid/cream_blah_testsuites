@@ -23,7 +23,7 @@ final_job_status = cream_testing.get_final_status(cream_job_id)
 print "Final job status = " + final_job_status
 
 my_utils=testsuite_utils.Utils()
-if my_utils.check_if_remote_file_exist("cream-06.pd.infn.it", "root", "cmsgrid", "/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
+if my_utils.check_if_remote_file_exist("/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
     print "File exists"
 else:
     print "File does NOT exist"
@@ -32,15 +32,15 @@ else:
 print "Changing configuration parameter ... "
 cream_regression.change_conf_param_in_file("/root/sarab_devel/siteinfo/services/glite-creamce", "CREAM_SANDBOX_PATH", "/tmp/cream_sanbox_x")
 
-if my_utils.check_if_remote_file_exist("cream-06.pd.infn.it", "root", "cmsgrid", "/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
+if my_utils.check_if_remote_file_exist("/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
     print "File exists"
 else:
     print "File does NOT exist"
 
 print "Reconfiguring cream ce ... "
-cream_regression.run_yaim_func("/root/sarab_devel/siteinfo/site-info.def", "config_cream_ce", "cream-06.pd.infn.it", "root", "cmsgrid")
+cream_regression.run_yaim_func("/root/sarab_devel/siteinfo/site-info.def", "config_cream_ce")
 
-if my_utils.check_if_remote_file_exist("cream-06.pd.infn.it", "root", "cmsgrid", "/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
+if my_utils.check_if_remote_file_exist("/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
     print "File exists"
 else:
     print "File does NOT exist"
@@ -49,7 +49,7 @@ else:
 print "Get db username and password from CE"
 db_usr_name, db_usr_pass = cream_regression.get_cream_db_user_password_from_config()
 
-if my_utils.check_if_remote_file_exist("cream-06.pd.infn.it", "root", "cmsgrid", "/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
+if my_utils.check_if_remote_file_exist("/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
     print "File exists"
 else:
     print "File does NOT exist"
@@ -60,16 +60,16 @@ cream_job_name =  cream_regression.get_job_label_from_jid(cream_job_id)
 print cream_job_name
 options =  " --jobIds " + cream_job_name + " -s " + final_job_status
 
-if my_utils.check_if_remote_file_exist("cream-06.pd.infn.it", "root", "cmsgrid", "/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
+if my_utils.check_if_remote_file_exist("/etc/tomcat5/Catalina/localhost/ce-cream.xml"):
     print "File exists"
 else:
     print "File does NOT exist"
 
 print "Try purge job ..."
-cream_regression.exec_jobDBAdminPurger_sh("cream-06.pd.infn.it", "root", "cmsgrid", db_usr_name, db_usr_pass, "/etc/glite-ce-cream/cream-config.xml", " --jobIds " + cream_job_name + " -s " + final_job_status)
+cream_regression.exec_jobDBAdminPurger_sh(db_usr_name, db_usr_pass, "/etc/glite-ce-cream/cream-config.xml", " --jobIds " + cream_job_name + " -s " + final_job_status)
 
 # Verify that glite-ce-job-status not find the job anymore
 # and that the CREAM sandbox directory for the job has been deleted
 print "Verify if job is purged"
-final_res = cream_regression.check_if_job_purged(cream_job_id, sandbox_path_value_old, "cream-06.pd.infn.it", "root", "cmsgrid")
+final_res = cream_regression.check_if_job_purged(cream_job_id, sandbox_path_value_old)
 print final_res

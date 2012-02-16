@@ -1,4 +1,6 @@
 import paramiko, re
+import logging
+import cream_testsuite_conf
 
 class BatchSysMngError(Exception):
     """ Abstract Class to manage exception of batch system management module."""
@@ -35,16 +37,12 @@ class JobNotFoundError(BatchSysMngError):
 ################################
 ## AbstractBatchSystem        ##
 ################################
-class AbstractBatchSystem:
+class AbstractBatchSystem(object):
 
     """Abstract class to manage different batch systems"""
-   
-    def __init__(self, batch_sys, host, admin_name, admin_pass):
-        self.my_batch_sys = batch_sys
-        self.my_host = host
-        self.my_admin_name = admin_name
-        self.my_admin_pass = admin_pass
 
+    def __init__(self):
+        pass
 # Public interface
 
     def del_job_from_batch_id(self, batch_id):
@@ -67,15 +65,17 @@ class LSFBatchSys(AbstractBatchSystem):
     """Class to manage LSF batch systems"""
  
     ssh_connection = paramiko.SSHClient()
-  
-    def __init__(self, batch_sys, my_host, lsf_admin_name, lsf_admin_pass):
-        self.batch_sys = batch_sys
-        self.lsf_host = my_host
-        self.lsf_admin = lsf_admin_name
-        self.lsf_pass = lsf_admin_pass
+
+    def __init__(self):
+
+        self.my_log = logging.getLogger('LSFBatchSys')
+        self.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+        lsf_host = self.my_conf.getParam('batch_system','batch_master_host')
+        lsf_admin = self.my_conf.getParam('batch_system','batch_master_admin')
+        lsf_pass = self.my_conf.getParam('batch_system','batch_master_admin_password')
         print "Get ssh connection with cream ce to manage batch system commands"
         self.ssh_connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())  #don't ask for acceptance of foreign host key (auto accept)
-        self.ssh_connection.connect(self.lsf_host, username=self.lsf_admin, password=self.lsf_pass)
+        self.ssh_connection.connect(lsf_host, username=lsf_admin, password=lsf_pass)
 
 # Public interface
 
@@ -135,18 +135,19 @@ class PBSBatchSys(AbstractBatchSystem):
 
     ssh_connection = paramiko.SSHClient() 
   
-    def __init__(self, batch_sys, my_host, torque_admin_name, torque_admin_pass):
-        self.batch_sys = batch_sys
-        self.torque_host = my_host
-        self.torque_admin = torque_admin_name
-        self.torque_pass = torque_admin_pass
-        print "batch_sys " + self.batch_sys
-        print "torque_host " + self.torque_host
-        print "torque_admin " + self.torque_admin
-        print "torque_pass " + self.torque_pass
+    def __init__(self):
+
+        self.my_log = logging.getLogger('PBSBatchSys')
+        self.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+        torque_host = self.my_conf.getParam('batch_system','batch_master_host')
+        torque_admin = self.my_conf.getParam('batch_system','batch_master_admin')
+        torque_pass = self.my_conf.getParam('batch_system','batch_master_admin_password')
+        print "torque_host " + torque_host
+        print "torque_admin " + torque_admin
+        print "torque_pass " + torque_pass
         print "Get ssh connection with cream ce to manage batch system commands"
         self.ssh_connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())  #don't ask for acceptance of foreign host key (auto accept)
-        self.ssh_connection.connect(self.torque_host, username=self.torque_admin, password=self.torque_pass)
+        self.ssh_connection.connect(torque_host, username=torque_admin, password=torque_pass)
 
 # Public interface
 
@@ -204,27 +205,21 @@ class PBSBatchSys(AbstractBatchSystem):
 ################################
 
 class BatchSystemFactory:
- 
-    def __init__(self, batch_sys, my_host, batch_admin_name, batch_admin_pass):
+
+    def __init__(self, batch_sys):
         self.batch_sys = batch_sys
-        self.my_host = my_host
-        self.batch_admin_name = batch_admin_name
-        self.batch_admin_pass = batch_admin_pass
 
     def getBatchSystemMng(self):
 
-        my_batch_sys = AbstractBatchSystem(self.batch_sys, self.my_host, self.batch_admin_name, self.batch_admin_pass)
+        my_batch_sys = AbstractBatchSystem()
 
         if self.batch_sys == "lsf":
-            my_batch_sys = LSFBatchSys(self.batch_sys, self.my_host, self.batch_admin_name, self.batch_admin_pass)
+            print "Get batch sys mng for %s" % self.batch_sys 
+            my_batch_sys = LSFBatchSys()
             return my_batch_sys
         elif self.batch_sys == "pbs":
-            print "Get batch sys mng for PBS"
-            print "batch_sys " + self.batch_sys
-            print "batch_host " + self.my_host
-            print "batch_admin_name " + self.batch_admin_name
-            print "batch_admin_pass " + self.batch_admin_pass
-            my_batch_sys = PBSBatchSys(self.batch_sys, self.my_host, self.batch_admin_name, self.batch_admin_pass)
+            print "Get batch sys mng for %s" % self.batch_sys 
+            my_batch_sys = PBSBatchSys()
             return my_batch_sys
 
         return batch_sys + "batch system not supported"

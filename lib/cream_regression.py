@@ -410,18 +410,15 @@ def job_db_admin_purger_script_check(db_user_name, db_user_password, conf_f):
 
 #############################################################################################################################
 ##############################################################################################################################
-def delete_job_from_batch_system(cream_job_id, batch_sys, batch_master_host, batch_admin_user, batch_admin_pass):
+def delete_job_from_batch_system(cream_job_id, batch_sys):
         '''
                 Description:    Manually delete  a job from the declared batch system.
                 Arguments:      cream_job_id (cream job identifier), 
-                                batch_master_host (the server hosting the batch system master, either ip or name),
-                                batch_admin_user (a user existing on the batch master host, having admin priviledges),
-                                batch_admin_pass (the aforementioned user's ssh password)
                 Returns:        Nothing
                 Exceptions:     batch_sys_mng.BatchCmdError, batch_sys_mng.JobNotFoundError
         '''
 
-        batchSysFactory = batch_sys_mng.BatchSystemFactory(batch_sys, batch_master_host, batch_admin_user, batch_admin_pass)
+        batchSysFactory = batch_sys_mng.BatchSystemFactory(batch_sys)
         my_batch_sys_mng = batchSysFactory.getBatchSystemMng()
 
         batch_jid = "not_set"

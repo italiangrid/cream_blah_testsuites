@@ -7,8 +7,8 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    batchSysFactoryLSF = batch_sys_mng.BatchSystemFactory("lsf", "cream-37.pd.infn.it", "root", "cmsgrid")
-    batchSysFactoryPBS = batch_sys_mng.BatchSystemFactory("pbs", "cream-06.pd.infn.it", "root", "cmsgrid")
+    batchSysFactoryLSF = batch_sys_mng.BatchSystemFactory("lsf")
+    batchSysFactoryPBS = batch_sys_mng.BatchSystemFactory("pbs")
     print "Creo il mio lsf manager"
     batch_sys_mng_lsf = batchSysFactoryLSF.getBatchSystemMng()
     print "Creo il mio pbs manager"
