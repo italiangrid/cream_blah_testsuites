@@ -36,6 +36,7 @@ class CommandMng():
             '''
           
             self.my_log.info("Executing command : " + command)
+            print "Executing command : " + command
             args = shlex.split(command.encode('ascii'))
             p = subprocess.Popen( args , shell=False , stderr=subprocess.PIPE , stdout=subprocess.PIPE )
 
@@ -45,9 +46,6 @@ class CommandMng():
                     out = p.stdout
                     #my_output = out.readlines()
                     my_output = out.read()
-                    print "FOR DEBUG PURPOSE BEGIN:"
-                    print my_output
-                    print "FOR DEBUG PURPOSE END"
                     self.my_log.debug("".join(my_output))
             else:
                     my_output = ""
@@ -58,6 +56,8 @@ class CommandMng():
                     self.my_log.debug("".join(my_error))
             else:
                     my_error = ""
+            print "exec local command output: \n" + my_output
+            print "exec local command error \n" + my_error
 
             if retVal != 0 and len(my_output) != 0: 
                 if "error" in ','.join(my_output).lower() or "fatal" in ','.join(my_output).lower() or "fault" in ','.join(my_output).lower() or retVal != 0 :
@@ -180,7 +180,6 @@ class Utils():
         in_line = in_file.readline()
         while in_line:
             in_line = in_line.strip()
-            self.my_log.debug("Read row: " + in_line)
             if re.search('^#', in_line):
                 in_line = in_file.readline()
                 continue
