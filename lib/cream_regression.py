@@ -24,14 +24,15 @@ Implemented methods enumeration:
 3)  exec_cream_cli_command  
 4)  enable_submission
 5)  check_allowed_submission
-6)  get_file_from_ce
-7)  get_cream_db_user_password_from_config
-8)  job_db_admin_purger_script_check
-9)  check_parameter
-10) delete_job_from_batch_system
-11) job_status_should_be_in
-12) check_ce_GlueForeignKey_GlueCEUniqueID
-13) check_cream_dynamic_info
+6)  create_rfc_proxy
+7)  get_file_from_ce
+8)  get_cream_db_user_password_from_config
+9)  job_db_admin_purger_script_check
+10)  check_parameter
+11) delete_job_from_batch_system
+12) job_status_should_be_in
+13) check_ce_GlueForeignKey_GlueCEUniqueID
+14) check_cream_dynamic_info
 
 
 '''
@@ -91,6 +92,9 @@ def exec_cream_cli_command(command):
         Arguments:      cream-cli command.
         Returns:        nothing.
     '''
+
+    print "Executing command %s" % command
+
     my_utility = testsuite_utils.CommandMng()
 
     try:
@@ -168,6 +172,57 @@ def check_allowed_submission(ce_endpoint):
         out = out.replace (" ", "_")
 
         return out
+
+##############################################################################################################################
+##############################################################################################################################
+def create_rfc_proxy(password, vo, cert=None, key=None, time=None):
+        '''
+                |  Description:  |  Create a user proxy.                                        |\n
+                |  Arguments:    |  password  |  the user's proxy password                      |
+                |                |  vo        |  for the voms extention.                        |
+                |                |  cert      |  non standard certificate path                  |
+                |                |  key       |  non standard key path                          |
+                |                |  time      |  the validity period of the proxy. Form: HH:MM  |\n
+                |  Returns:      |  nothing.                                                    |
+        '''
+
+
+        com = "/usr/bin/voms-proxy-init -pwstdin --voms %s -rfc" % vo
+
+        if cert != None and key != None:
+            com = com + ' -cert ' + cert + ' -key ' + key
+        if time != None:
+            pattern = "\d\d\:\d\d"
+            match = re.search(pattern,time)
+            if match:
+                com = com + ' -valid ' + time
+            else:
+                raise _error("Wrong time format for proxy creation! It must be in the form HH:MM")
+
+        if (cert != None and key == None) or (cert == None and key != None):
+            raise _error("Wrong arguments for proxy creation: " + password + " " + vo + " " + cert + " " + key)
+
+        args = shlex.split(com.encode('ascii'))
+        proc = subprocess.Popen( args , shell=False , stderr=subprocess.STDOUT , stdout=subprocess.PIPE , stdin=subprocess.PIPE)
+        (stdoutdata, stderrdata) = proc.communicate(input=password)
+
+        retVal=proc.wait()
+
+        if stdoutdata is not None and len(stdoutdata) != 0:
+            stdoutdata = "".join(stdoutdata)
+        else:
+            stdoutdata = ""
+        if stderrdata is not None and len(stderrdata) != 0:
+            stderrdata = "".join(stderrdata)
+        else:
+            stderrdata = ""
+        print "Command " + com + " output: \n" + stdoutdata
+        print "Command " + com + " error \n" + stderrdata
+
+        if retVal != 0 :
+            raise _error("Rfc proxy creation failed.")
+
+        return stdoutdata
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -486,6 +541,43 @@ def run_yaim_func(site_info_file, func_to_run):
 
 ###############################################################################
 ###############################################################################
+def configure_ce_by_yaim(site_info_file):
+    '''
+        | Description: | Run yaim using site_info_file as site-ifo.def file to configure the ce. |
+        |              | Check in testsuite configuration file which batch system is used and if |
+        |              | ce is also batch master to set configurations node types                |
+        | Arguments:   | site_info_file | complete file path name of site-info.def file on ce    |
+        |              |                | under test                                             |
+        | Returns:     | Nothing        |                                                        |
+        | Exception:   | Throws exception on error.                                              |
+    '''
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    batch_sys = my_conf.getParam('batch_system','batch_sys')
+    batch_master_host = my_conf.getParam('batch_system','batch_master_host')
+    ce_host = my_conf.getParam('submission_info','ce_host')
+
+    command = "/opt/glite/yaim/bin/yaim -r -s " + site_info_file + " -n creamCE" 
+
+    if batch_sys is 'pbs':
+        if ce_host is batch_master_host:
+            command = command + " -n TORQUE_server -n TORQUE_utils"
+        else:
+            command = command + " -n TORQUE_utils"
+
+    if batch_sys is 'lsf':
+        command = command + " -n LSF_utils"
+
+    if (batch_sys is not 'pbs') and (batch_sys is not 'lsf'):
+        raise  _error("Batch system %s is NOT supported" % batch_sys)
+    
+    print "Exec remote command: " + command
+
+    my_utility = testsuite_utils.CommandMng()
+
+    my_utility.exec_remote_command(command)
+
+###############################################################################
+###############################################################################
 def check_if_job_purged(cream_job_id, cream_sandbox):
 
     '''
@@ -539,21 +631,24 @@ def job_status_should_be_in(cream_job_id, statuses_list):
                    Exceptions:     _error if the status does not reach an admitted status in five minutes
 
         '''
+        final_states = ['DONE-OK', 'DONE-FAILED', 'ABORTED', 'CANCELLED']
+
         start = datetime.datetime.now()
         time.sleep(5)
         stop = datetime.datetime.now()
         elapsed = stop - start
-        while elapsed < datetime.timedelta(minutes=2):
+        while elapsed < datetime.timedelta(minutes=5):
                 status = cream_testing.get_current_status(cream_job_id)
-                if status in statuses_list:
+                if (status in statuses_list) or (status in final_states):
                         break
                 else:
                         time.sleep(20)
+                        elapsed = datetime.datetime.now() - start
 
         print "Detected Status = " + status
-        right_otput_str_list = " ".join(statuses_list)
+        right_otput_str_list = "".join(statuses_list)
         if status not in statuses_list:
-                 raise _error("Expected status should be in " + right_otput_str_list + " for job " + jid + " was actually " + status)
+                 raise _error("Expected status should be in " + right_otput_str_list + " for job " + cream_job_id + " was actually " + status)
 
 #############################################################################################################################
 ##############################################################################################################################
