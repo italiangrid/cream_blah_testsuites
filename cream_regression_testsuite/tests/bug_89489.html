@@ -55,7 +55,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">Documentation</td>
-<td class="colspan4" colspan="4">Regression test of bug #84261 BNotifier on CREAM CE seems to not restart cleanly.\n\nTest Description:\nTo test the fix, configure a CREAM CE using the new blparser.\nThen try a:\n\nservice gLite restart\n\nIt shouldn't report the error message:\n\nStarting BNotifier: /opt/glite/bin/BNotifier: Error creating and binding socket: Address already in use\n\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?84261\n\nRelevant CREAM task where released (task #23312: BLAH v. 1.18.0):\nhttps://savannah.cern.ch/task/?23312\n\n</td>
+<td class="colspan4" colspan="4">Regression test of bug #89489 yaim plugin for CREAM CE does not execute a check function due to name mismatch\n\nTest Description:\n\nConfigure a CREAM CE via yaim and save the yaim output. It should contain the string:\n\nINFO: Executing function: config_cream_gip_scheduler_plugin_check\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?89489\n\nRelevant CREAM task where released (task #23312: BLAH v. 1.18.0):\nhttps://savannah.cern.ch/task/?23312\n\n</td>
 </tr>
 <tr>
 <td class="name">Metadata</td>
