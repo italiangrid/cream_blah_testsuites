@@ -263,7 +263,7 @@ def create_jdl_87492(vo, output_dir):
 
 #############################################################################################################################
 #############################################################################################################################
-def check_job_out__87492(job_output_location):
+def check_job_out_87492(job_output_location):
 
     ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
 
@@ -291,6 +291,20 @@ def check_job_out__87492(job_output_location):
         return ret_val[1]
     else:
         return ret_val[0]
+
+#############################################################################################################################
+#############################################################################################################################
+def check_job_out_89489(job_output):
+
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+
+    result = re.search("INFO: Executing function: config_cream_gip_scheduler_plugin_check", job_output)
+
+    if result is None:
+        return ret_val[1]
+    else:
+        return ret_val[0]
+
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -548,7 +562,7 @@ def configure_ce_by_yaim(site_info_file):
         |              | ce is also batch master to set configurations node types                |
         | Arguments:   | site_info_file | complete file path name of site-info.def file on ce    |
         |              |                | under test                                             |
-        | Returns:     | Nothing        |                                                        |
+        | Returns:     | configuration command output and error as strings                       |
         | Exception:   | Throws exception on error.                                              |
     '''
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
@@ -556,25 +570,31 @@ def configure_ce_by_yaim(site_info_file):
     batch_master_host = my_conf.getParam('batch_system','batch_master_host')
     ce_host = my_conf.getParam('submission_info','ce_host')
 
-    command = "/opt/glite/yaim/bin/yaim -r -s " + site_info_file + " -n creamCE" 
+    command = "/opt/glite/yaim/bin/yaim -c -s " + site_info_file + " -n creamCE" 
 
-    if batch_sys is 'pbs':
-        if ce_host is batch_master_host:
+    print "Batch sys is " + batch_sys
+    print "Batch master is: " + batch_master_host
+    print "ce_host is: " + ce_host
+
+    if batch_sys == "pbs":
+        if ce_host == batch_master_host:
             command = command + " -n TORQUE_server -n TORQUE_utils"
         else:
             command = command + " -n TORQUE_utils"
 
-    if batch_sys is 'lsf':
+    if batch_sys == "lsf":
         command = command + " -n LSF_utils"
 
-    if (batch_sys is not 'pbs') and (batch_sys is not 'lsf'):
+    if (batch_sys != "pbs") and (batch_sys != "lsf"):
         raise  _error("Batch system %s is NOT supported" % batch_sys)
     
     print "Exec remote command: " + command
 
     my_utility = testsuite_utils.CommandMng()
 
-    my_utility.exec_remote_command(command)
+    out, err = my_utility.exec_remote_command(command)
+
+    return out, err
 
 ###############################################################################
 ###############################################################################
