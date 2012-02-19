@@ -728,7 +728,7 @@ def check_cream_dynamic_info(ce_host):
 
         fPtr3=p3.stdout
         output=fPtr3.readlines()
-        output=" ".join(output)
+        output="".join(output)
 
         fPtrErr1=p1.stderr
         error=fPtrErr1.readlines()
@@ -742,5 +742,77 @@ def check_cream_dynamic_info(ce_host):
                 print "Bug Fixed"
         else:
                 raise _error("444444 FOUND in `" + com + "`\nBug not fixed")
-               
+
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_83338(use_cemon_val):
+    '''
+       | Description: |    
+       | Arguments:   |   
+       | Returns:     |   
+    '''
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+   
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    ce_host = my_conf.getParam('submission_info','ce_host')
+
+    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b \"o=glue\" | grep -i endpointtype"
+
+    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p2 = subprocess.Popen(["grep", "-i", "endpointtype"], stdin=p1.stdout, stdout=subprocess.PIPE)
+
+    p2.wait()
+
+    fPtr2 = p2.stdout
+    output = fPtr2.readlines()
+    output="".join(output)
+
+    fPtrErr1 = p1.stderr 
+    error=fPtrErr1.readlines()
+    error = "".join(error)
+
+    if len(error) != 0:
+        raise _error(com + "\ncommand failed. \nCommand reported: " +  error)
+
+    if len(output) == 0:
+        print "endpointtype NOT FOUND in `" + com + "`"
+        raise _error("endpointtype NOT FOUND in `" + com + "`")
+    else:
+
+        ex = re.compile('(?<=endpointType=).', re.IGNORECASE)
+        endpoint_type = ex.search(output)
+
+        if endpoint_type is None:
+            raise _error("endpointType NOT found in output of %s" % com)
+
+        endpoint_type = endpoint_type.group()
+        print "endpoint_type = %s" % endpoint_type
+
+        if (use_cemon_val == "true"):
+            if endpoint_type == 3:
+                print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                return ret_val[0]
+            else:
+                print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                return ret_val[1]
+        else:
+            if (use_cemon_val == "false"):
+                if endpoint_type == 2:
+                    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                    return ret_val[0]
+                else:
+                    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                    return ret_val[1]
+            else:
+                raise _error("Unknown value use_cemon=%s" % use_cemon_val)
+
+    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+
+    return ret_val[1]
+
+
+
+
+
+
 
