@@ -115,6 +115,7 @@ node-file =
 [blah_parameters]
 blah_cream_concurrency_level = cream_concurrency_level
 blah_bupdater_loop_interval = bupdater_loop_interval
+blah_check_children_interval = blah_check_children_interval
 ;
 ;
 [cream_db_params]
