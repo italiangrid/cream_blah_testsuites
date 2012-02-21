@@ -167,10 +167,13 @@ my_conf.checkIfParamIsNull('services_glite_creamce', services_glite_creamce)
 # BLAH configuration parameters names 
 blah_cream_concurrency_level = my_conf.getParam('blah_parameters', 'blah_cream_concurrency_level')
 blah_bupdater_loop_interval = my_conf.getParam('blah_parameters', 'blah_bupdater_loop_interval')
+blah_check_children_interval = my_conf.getParam('blah_parameters', 'blah_check_children_interval')
 print " blah_cream_concurrency_level = " + blah_cream_concurrency_level
 print " blah_bupdater_loop_interval = " + blah_bupdater_loop_interval
+print " blah_check_children_interval = " + blah_check_children_interval
 my_conf.checkIfParamIsNull('blah_cream_concurrency_level', blah_cream_concurrency_level)
 my_conf.checkIfParamIsNull('blah_bupdater_loop_interval', blah_bupdater_loop_interval)
+my_conf.checkIfParamIsNull('blah_check_children_interval', blah_check_children_interval)
 
 # CREAM configuration parameters names
 cream_sandbox_path = my_conf.getParam('cream_parameters', 'cream_sandbox_path')
