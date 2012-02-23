@@ -139,15 +139,15 @@ def saturate_batch_system():
     if len(tot_cpu_in_batch_cluster) == 0: 
         raise testsuite_exception.TestsuiteError("Mandatory parameter tot_cpu_num is empty. Check testsuite configuration")
     if len(vo) == 0:
-        raise cream_testsuite_exception.TestsuiteError("Mandatory parameter vo is empty. Check testsuite configuration")
+        raise testsuite_exception.TestsuiteError("Mandatory parameter vo is empty. Check testsuite configuration")
     if len(proxy_pass) == 0:
-        raise cream_testsuite_exception.TestsuiteError("Mandatory parameter proxy_pass is empty. Check testsuite configuration")
+        raise testsuite_exception.TestsuiteError("Mandatory parameter proxy_pass is empty. Check testsuite configuration")
     if len(ce_endpoint) == 0:
-        raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_endpoint is empty. Check testsuite configuration")
+        raise testsuite_exception.TestsuiteError("Mandatory parameter ce_endpoint is empty. Check testsuite configuration")
     if len(cream_queue) == 0:
-        raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_queue is empty. Check testsuite configuration")
+        raise testsuite_exception.TestsuiteError("Mandatory parameter cream_queue is empty. Check testsuite configuration")
     if len(output_dir) == 0:
-        raise cream_testsuite_exception.TestsuiteError("Mandatory parameter tmp_dir is empty. Check testsuite configuration")
+        raise testsuite_exception.TestsuiteError("Mandatory parameter tmp_dir is empty. Check testsuite configuration")
 
     print "Creating proxy ..."
     cream_testing.create_proxy(proxy_pass, vo)
