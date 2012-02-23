@@ -5,8 +5,11 @@ import cream_testsuite_exception
 import shlex
 import re
 import os
-import  subprocess
+import subprocess
 import paramiko
+import datetime
+import os
+import regression_vars
 
 class CreamConfigLayoutMng():
 
@@ -25,7 +28,9 @@ class CreamConfigLayoutMng():
         self.ce_host = self.my_conf.getParam('submission_info','ce_host')
         self.admin_name = self.my_conf.getParam('ce_specific','cream_root_usr')
         self.admin_pass = self.my_conf.getParam('ce_specific','cream_root_pass')
-        self.output_dir = self.my_conf.getParam('testsuite_behaviour','tmp_dir')
+        #self.output_dir = self.my_conf.getParam('testsuite_behaviour','tmp_dir')
+        self.output_dir = regression_vars.tmp_dir   # The output dir must be always the same in all the testsuite,
+                                                    # to allow cleaning procedure
         self.my_utils = testsuite_utils.Utils()
 
         if len(self.ce_host) == 0:
@@ -34,9 +39,6 @@ class CreamConfigLayoutMng():
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
         if len(self.admin_pass) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_pass is empty. Check testsuite configuration")
-        if len(self.output_dir) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter tmp_dir is empty. Check testsuite configuration")
-
 
     def get_cream_db_user_password(self):
 

@@ -1,4 +1,4 @@
-import cream_testsuite_conf, testsuite_exception, testsuite_utils, cream_testing
+import cream_testsuite_conf, testsuite_exception, testsuite_utils, cream_testing, regression_vars
 import re
 
 #############################################################################################################################
@@ -130,7 +130,8 @@ def saturate_batch_system():
     proxy_pass = my_conf.getParam('submission_info','proxy_pass')
     ce_endpoint = my_conf.getParam('submission_info','ce_endpoint')
     cream_queue = my_conf.getParam('submission_info', 'cream_queue')
-    output_dir = my_conf.getParam('testsuite_behaviour','tmp_dir')
+    #output_dir = my_conf.getParam('testsuite_behaviour','tmp_dir')
+    output_dir = regression_vars.tmp_dir
 
     ce = ce_endpoint + "/" + cream_queue
 
