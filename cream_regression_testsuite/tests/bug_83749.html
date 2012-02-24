@@ -58,6 +58,20 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #83749 yaim-cream-ce should manage the attribute bupdater_loop_interval.\n\nTest Description:\nhttp://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_83749_yaim_cream_ce_should_m\n\nTo test the fix, check in the CREAM CE if the file /etc/blah.config contains the parameter bupdater_loop_interval.\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?83749\n\nRelevant CREAM task where released (task #21059: CREAM v. 1.14):\nhttps://savannah.cern.ch/task/?21059\n</td>
 </tr>
 <tr>
+<td class="name">Suite Teardown</td>
+<td>Suite Teardown</td>
+<td># Restore the ce configuration</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Test Teardown</td>
+<td>Test Teardown</td>
+<td># Restart tomcat server on ce</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Metadata</td>
 <td>Temporary Files Location</td>
 <td>${tmp_dir}</td>
@@ -123,6 +137,25 @@ td.name, th.name {
 <tr>
 <td class="name">Library</td>
 <td>cream_regression.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="variable">
+<tr>
+<th class="name" colspan="5">Variables</th>
+</tr>
+<tr>
+<td class="name">${local_saved_copy}</td>
+<td>${EMPTY}</td>
 <td></td>
 <td></td>
 <td></td>
@@ -216,6 +249,34 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Exec Remote Command</td>
+<td>service tomcat5 stop</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${local_copy_of_services}=</td>
+<td>Get File From CE</td>
+<td>${services_glite_creamce}</td>
+<td>${tmp_dir}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Suite Variable</td>
+<td>${local_saved_copy}</td>
+<td>${local_copy_of_services}_save</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Exec Local Command</td>
+<td>/bin/cp ${local_copy_of_services} ${local_saved_copy}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Change Conf Param in File</td>
 <td>${services_glite_creamce}</td>
 <td>${cream_sandbox_path}</td>
@@ -268,6 +329,46 @@ td.name, th.name {
 <td>Should be Equal</td>
 <td>${final_res}</td>
 <td>JOB PURGED</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="keyword">
+<tr>
+<th class="name" colspan="5">Keywords</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Test Teardown">Test Teardown</a></td>
+<td>Run Keyword If Test Failed         </td>
+<td>Exec Remote Command</td>
+<td>service tomcat5 restart</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Suite Teardown">Suite Teardown</a></td>
+<td>Put File on CE  </td>
+<td>${local_saved_copy}</td>
+<td>${services_glite_creamce}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Configure CE by Yaim    </td>
+<td>${site_info}  </td>
+<td></td>
 <td></td>
 </tr>
 <tr>
