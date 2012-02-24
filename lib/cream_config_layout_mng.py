@@ -243,9 +243,5 @@ class CreamConfigLayoutMng():
         ssh.connect(self.ce_host, username = self.admin_name, password = self.admin_pass)
         sftp = ssh.open_sftp()
         sftp.put(temp_file, file_name)
-        print "+++++++ lstat of file " + file_name
-        print sftp.lstat(file_name)
-        print "+++++++ lstat of file /etc/tomcat5/Catalina/localhost/ce-cream.xml"
-        print sftp.lstat("/etc/tomcat5/Catalina/localhost/ce-cream.xml")
         sftp.close()
 
