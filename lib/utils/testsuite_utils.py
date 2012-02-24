@@ -69,10 +69,8 @@ class CommandMng():
     def exec_remote_command(self, command):
 
         '''
-                | Description:      | Executes a generic unix command on the indicated host with |
-                |                   | provided admin name and password.                          |
-                | Arguments:        | remote cream host, command to execute, administrator name  |
-                |                   | and administrator password.                                |
+                | Description:      | Executes a generic unix command on the cream ce under test |
+                | Arguments:        | command to execute                                         |
                 | Returns:          | command output and error as strings                        |
         '''
 
@@ -155,8 +153,8 @@ class Utils():
             |              | that the configuration file is written as set of pairs            |
             |              | param_name = param_value. It jumps rows containing '#' character  |
             |              | before param_name, supposing they are comments.                   |
-            | Arguments:   | param_to_check: name of the parameter to search                   |
-            |              | conf_f: file where search the parameter.                          |
+            | Arguments:   | conf_f: file where search the parameter.                          |
+            |              | param_to_check: name of the parameter to search                   |
             | Returns:     | ret_val: with possible values INITIALIZED, NOT_PRESENT,           |
             |              |          or NOT_INITIALIZED                                       |
             |              | parameter_value may contain the param_to_check value or an empty  |
@@ -221,12 +219,11 @@ class Utils():
     def get_file_from_ce(self, file_to_get, output_dir):
 
         '''
-            | Description: | Gets the file_to_get from the cream endpoint provided. |
-            | Arguments:   | cream endpoint,                                        |
-            |              | admin_name,                                            |
-            |              | admin_pass,                                            |
-            |              | file to get (full path name).                          |
+            | Description: | Gets the file_to_get from the ce cream under test.     |
+            | Arguments:   | file to get (full path name)                           |
+            |              | output dir | local output path                         |
             | Returns:     | local full path of retrieved file.                     |
+            | Exceptions:  |                                                        |
         '''
       
         ce_host = Utils.my_ce_host
@@ -261,15 +258,31 @@ class Utils():
         return localpath
 
 
+    def put_file_on_ce(self, local_file, remote_file):
+
+        '''
+            | Description: | Putss the local_file on the cream ce under test.       |
+            | Arguments:   | local_file, remote_file                                |
+            | Returns:     | Nothing                                                |
+            | Exceptions:  |                                                        |
+        '''
+
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.connect(self.my_ce_host, username = self.my_admin_name, password = self.my_admin_pass)
+        sftp = ssh.open_sftp()
+        sftp.put(local_file, remote_file)
+        sftp.close()
+
+
     def check_if_remote_file_exist(self, remote_file):
 
         '''
-            | Description: | Gets the file_to_get from the cream endpoint provided. |
-            | Arguments:   | cream endpoint,                                        |
-            |              | admin_name,                                            |
-            |              | admin_pass,                                            |
-            |              | file to get (full path name).                          |
+            | Description: | Gets the file_to_get from the cream ce under test.     |
+            | Arguments:   | file to get (full path name)                           |
             | Returns:     | True/False                                             |
+            | Exceptions:  |                                                        |
         '''
 
         ce_host = Utils.my_ce_host
