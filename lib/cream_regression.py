@@ -111,6 +111,33 @@ def exec_cream_cli_command(command):
 
 ##############################################################################################################################
 ##############################################################################################################################
+def exec_local_command(command):
+
+    '''
+        Description:    Executes a local shell command.
+        Arguments:      command.
+        Returns:        nothing.
+    '''
+
+    print "Executing local command %s" % command
+
+    my_utility = testsuite_utils.CommandMng()
+
+    try:
+        output, error = my_utility.exec_command(command)
+    except Exception as exc:
+        print exc
+        raise _error("Command " + command + " execution failed")
+
+    if len(error) != 0:
+        raise _error("Command " + command + " execution failed with error:\n" + error)
+
+    return output
+
+
+
+##############################################################################################################################
+##############################################################################################################################
 def enable_submission(ce_endpoint):
 
         '''
@@ -323,18 +350,31 @@ def get_job_label_from_jid(cream_job_id):
 ##############################################################################################################################
 def get_file_from_ce(file_to_get, output_dir):
 
-        '''
-                Description:    Gets the file_to_get from the cream endpoint provided.
-                Arguments:      cream endpoint, 
-                                admin_name,
-                                admin_pass,
-                                file to get (full path name).
-                Returns:        local full path of retrieved file.
-        '''
+    '''
+        | Description: | Gets the file_to_get from the cream endpoint provided.    |
+        | Arguments:   | file to get (full path name)                              |
+        |              | directory where to save the local file copy               |
+        | Returns:     | local full path of retrieved file.                        |
+    '''
 
-        my_utility = testsuite_utils.Utils()
+    my_utility = testsuite_utils.Utils()
 
-        return my_utility.get_file_from_ce(file_to_get, output_dir) 
+    return my_utility.get_file_from_ce(file_to_get, output_dir) 
+
+#############################################################################################################################
+##############################################################################################################################
+def put_file_on_ce(file_to_put, file_dest):
+
+    '''
+        | Description: | Puts the file_to_put in file_dest on ce cream under test. |
+        | Arguments:   | local file to put                                         |
+        |              | remote file destination                                   |
+        | Returns:     | local full path of retrieved file.                        |
+    '''
+
+    my_utility = testsuite_utils.Utils()
+
+    return my_utility.put_file_on_ce(file_to_put, file_dest)
 
 #############################################################################################################################
 ##############################################################################################################################
