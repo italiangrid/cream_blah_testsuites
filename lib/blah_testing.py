@@ -1,3 +1,22 @@
+#############################################################################
+# Authors:
+# Sara Bertocco - sara dot bertocco at pd dot infn dot it
+#############################################################################
+'''
+Implemented methods enumeration:
+
+ 1) get_blah_parser_log_file_name
+ 2) get_job_num_from_jid
+ 3) get_notifications_in_blah_parser_log
+ 4) check_notifications_for_normally_finished
+ 5) check_notifications_for_cancelled
+ 6) check_notifications_for_resumed
+ 7) check_if_notifications_list_is_valid
+ 8) saturate_batch_system
+ 9) cancel_list_of_jobs
+
+'''
+
 import cream_testsuite_conf, testsuite_exception, testsuite_utils, cream_testing, regression_vars
 import re
 
@@ -5,9 +24,9 @@ import re
 ##############################################################################################################################
 def get_blah_parser_log_file_name():
     '''
-       | Description: | Get blah log parser file name fron blah testsuite configuration       |
+       | Description: | Get blah log parser file name from blah testsuite configuration       |
        | Arguments:   | None                                                                  |
-       | Returns:     | blah_parser_log_file_name                                             |
+       | Returns:     | blah_parser_log_file_name (complete path)                             |
        | Exceptions:  |                                                                       |
     '''
 
@@ -37,13 +56,13 @@ def get_job_num_from_jid(cream_job_id):
 ##############################################################################################################################
 def get_notifications_in_blah_parser_log(blah_parser_log_file, job_num):
     '''
-       | Description: |   |
-       |              |   |
-       |              |   |
-       | Arguments:   | blah_parser_log_file | path name of local blah parser log file        |
-       |              | job_num              | numeric part of jobid                          |
-       | Returns:     |                                                                |
-       | Exceptions:  |                                                                       
+       | Description: | Checks in a local copy of blah parser log file (received as parameter) |
+       |              | the notifications related to the job Job_num (received as parameter)   |
+       |              |  nd returns the list of notifications.                                 |
+       | Arguments:   | blah_parser_log_file | path name of local copy of blah parser log file |
+       |              | job_num              | numeric part of jobid                           |
+       | Returns:     | a list of notifications (i.e. a list of digits)                        |
+       | Exceptions:  |                                                                        |
     '''
 
     com = "/bin/grep " + job_num + " " + blah_parser_log_file
@@ -62,10 +81,16 @@ def get_notifications_in_blah_parser_log(blah_parser_log_file, job_num):
 
 def check_notifications_for_normally_finished(notifications_list):
     '''
-        * A notification with JobStatus=1 (this can be missing)
-        * A notification with JobStatus=2 (this can be missing)
-        * A notification with JobStatus=4 (this must be there) 
+       | Description: | Given a list of notifications received as input, checks if it is       |
+       |              | acceptable as notification list for a job normally finished, i.e.:     |
+       |              |  * A notification with JobStatus=1 (this can be missing)               |
+       |              |  * A notification with JobStatus=2 (this can be missing)               |
+       |              |  * A notification with JobStatus=4 (this must be there)                |
+       | Arguments:   | notifications_list | a list of notifications                           |
+       | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
+       | Exceptions:  |                                                                        |  
     '''
+
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
     valid_lists = [['4'], ['1','4'], ['2','4'], ['1','2','4']] 
 
@@ -77,9 +102,14 @@ def check_notifications_for_normally_finished(notifications_list):
 
 def check_notifications_for_cancelled(notifications_list):
     '''
-        * A notification with JobStatus=1 (this can be missing)
-        * A notification with JobStatus=2 (this can be missing)
-        * A notification with JobStatus=3 (this must be there) 
+       | Description: | Given a list of notifications received as input, checks if it is       |
+       |              | acceptable as notification list for a job cancelled, i.e.:             |
+       |              | * A notification with JobStatus=1 (this can be missing)                |
+       |              | * A notification with JobStatus=2 (this can be missing)                |
+       |              | * A notification with JobStatus=3 (this must be there)                 |
+       | Arguments:   | notifications_list | a list of notifications                           |
+       | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
+       | Exceptions:  |                                                                        | 
     '''
 
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
@@ -92,11 +122,16 @@ def check_notifications_for_cancelled(notifications_list):
 
 def check_notifications_for_resumed(notifications_list):
     '''
-        * A notification with JobStatus=1 (this can be missing)
-        * A notification with JobStatus=2 (this can be missing)
-        * A notification with JobStatus=5 (this must be there)
-        * A notification with JobStatus=2 (this can be missing)
-        * A notification with JobStatus=4 (this must be there) 
+       | Description: | Given a list of notifications received as input, checks if it is       |
+       |              | acceptable as notification list for a job suspended and resumed, i.e.: |
+       |              | * A notification with JobStatus=1 (this can be missing)                |
+       |              | * A notification with JobStatus=2 (this can be missing)                |
+       |              | * A notification with JobStatus=5 (this must be there)                 |
+       |              | * A notification with JobStatus=2 (this can be missing)                |
+       |              | * A notification with JobStatus=4 (this must be there)                 |
+       | Arguments:   | notifications_list | a list of notifications                           |
+       | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
+       | Exceptions:  |                                                                        | 
     '''
 
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
@@ -110,6 +145,12 @@ def check_notifications_for_resumed(notifications_list):
 
 def check_if_notifications_list_is_valid(list_to_check, good_notification_lists):
     '''
+       | Description: | Given a generic list of notifications, checks if it is included in a  |
+       |              | set of permissible lists of notifications.                            |
+       | Arguments:   | list_to_check           | list to be checked                          |
+       |              | good_notification_lists | set of permissible lists                    |
+       | Returns:     | true if list_to_check is in good_notification_lists, false otherwise  |
+       | Exceptions:  |                                                                       | 
     '''
 
     list_is_valid = False
@@ -123,6 +164,13 @@ def check_if_notifications_list_is_valid(list_to_check, good_notification_lists)
 
 def saturate_batch_system():
     '''
+       | Description: | Reads from test suite configuration file the value of total CPU number |
+       |              | present in the batch cluster and submits a number of jobs equal to     |
+       |              | the total CPU number, to saturete the batch system reading submission  |
+       |              | parameters from configuration file.                                    |
+       | Arguments:   | None                                                                   |
+       | Returns:     | The list of cream job ids of submitted jobs                            |
+       | Exceprtions: | TestsuiteError | if an error is present in parameters read from config |
     '''
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
     tot_cpu_in_batch_cluster = my_conf.getParam('batch_system','tot_cpu_num')
@@ -140,8 +188,6 @@ def saturate_batch_system():
         raise testsuite_exception.TestsuiteError("Mandatory parameter tot_cpu_num is empty. Check testsuite configuration")
     if len(vo) == 0:
         raise testsuite_exception.TestsuiteError("Mandatory parameter vo is empty. Check testsuite configuration")
-    if len(proxy_pass) == 0:
-        raise testsuite_exception.TestsuiteError("Mandatory parameter proxy_pass is empty. Check testsuite configuration")
     if len(ce_endpoint) == 0:
         raise testsuite_exception.TestsuiteError("Mandatory parameter ce_endpoint is empty. Check testsuite configuration")
     if len(cream_queue) == 0:
@@ -165,6 +211,12 @@ def saturate_batch_system():
 
 
 def cancel_list_of_jobs(job_ids_list):
+    '''
+      | Description: | Given a list of cream job ids, cancel them.          |
+      | Arguments:   | The list of job ids to cancel.                       |
+      | Returns:     | Nothing.                                             |
+      | Exceptions:  |                                                      |
+    '''
 
     for cream_job_id in job_ids_list:
         cream_testing.cancel_job(cream_job_id)
