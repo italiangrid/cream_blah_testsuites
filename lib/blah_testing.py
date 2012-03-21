@@ -11,13 +11,17 @@ Implemented methods enumeration:
  4) check_notifications_for_normally_finished
  5) check_notifications_for_cancelled
  6) check_notifications_for_resumed
- 7) check_if_notifications_list_is_valid
- 8) saturate_batch_system
- 9) cancel_list_of_jobs
-
+ 7) saturate_batch_system
+ 8) cancel_list_of_jobs
 '''
 
-import cream_testsuite_conf, testsuite_exception, testsuite_utils, cream_testing, regression_vars
+import cream_testsuite_conf
+import testsuite_exception
+import testsuite_utils
+import cream_testing
+import regression_vars
+import submission_thread
+
 import re
 
 #############################################################################################################################
@@ -86,18 +90,17 @@ def check_notifications_for_normally_finished(notifications_list):
        |              |  * A notification with JobStatus=1 (this can be missing)               |
        |              |  * A notification with JobStatus=2 (this can be missing)               |
        |              |  * A notification with JobStatus=4 (this must be there)                |
+       |              | Verify ONLY if arrives notification 4 (=done)                          |
        | Arguments:   | notifications_list | a list of notifications                           |
        | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
        | Exceptions:  |                                                                        |  
     '''
 
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
-    valid_lists = [['4'], ['1','4'], ['2','4'], ['1','2','4']] 
-
-    if check_if_notifications_list_is_valid(notifications_list, valid_lists):
-        return ret_val[0]
+    if ("4" in notifications_list):
+         return ret_val[0]
     else:
-        return ret_val[1]
+         return ret_val[1]
 
 
 def check_notifications_for_cancelled(notifications_list):
@@ -107,17 +110,20 @@ def check_notifications_for_cancelled(notifications_list):
        |              | * A notification with JobStatus=1 (this can be missing)                |
        |              | * A notification with JobStatus=2 (this can be missing)                |
        |              | * A notification with JobStatus=3 (this must be there)                 |
+       |              | Verify ONLY if arrives notification 3 (=cancelled)                     |
        | Arguments:   | notifications_list | a list of notifications                           |
        | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
        | Exceptions:  |                                                                        | 
     '''
 
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
-    valid_lists = [['3'], ['1','3'], ['2','3'], ['1','2','3']]
-    if check_if_notifications_list_is_valid(notifications_list, valid_lists):
-        return ret_val[0]
+    print "notifications_list"
+    print notifications_list
+    if ("3" in notifications_list):
+         return ret_val[0]
     else:
-        return ret_val[1]
+         return ret_val[1]
+
 
 
 def check_notifications_for_resumed(notifications_list):
@@ -129,37 +135,19 @@ def check_notifications_for_resumed(notifications_list):
        |              | * A notification with JobStatus=5 (this must be there)                 |
        |              | * A notification with JobStatus=2 (this can be missing)                |
        |              | * A notification with JobStatus=4 (this must be there)                 |
+       |              | Verify ONLY if arrive the notifications 5 (=suspended)                 |
+       |              | and after 4 (done)                                                  |
        | Arguments:   | notifications_list | a list of notifications                           |
        | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
        | Exceptions:  |                                                                        | 
     '''
 
     ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
-    valid_lists = [['5','4'],['1','5','4'], ['2','5','4'],['5','2','4'], ['1','2','5','4'],['2','5','2','4'],['1','5','2','4'],['1','2','5','2','4']] 
-
-    if check_if_notifications_list_is_valid(notifications_list, valid_lists):
-        return ret_val[0]
+    if ("5" in notifications_list) and ("4" in notifications_list[notifications_list.index("5"):]):
+         return ret_val[0]
     else:
-        return ret_val[1]
+         return ret_val[1]
 
-
-def check_if_notifications_list_is_valid(list_to_check, good_notification_lists):
-    '''
-       | Description: | Given a generic list of notifications, checks if it is included in a  |
-       |              | set of permissible lists of notifications.                            |
-       | Arguments:   | list_to_check           | list to be checked                          |
-       |              | good_notification_lists | set of permissible lists                    |
-       | Returns:     | true if list_to_check is in good_notification_lists, false otherwise  |
-       | Exceptions:  |                                                                       | 
-    '''
-
-    list_is_valid = False
-
-    for list in good_notification_lists:
-        if list_to_check == list:
-            list_is_valid = True
-
-    return list_is_valid
 
 
 def saturate_batch_system():
