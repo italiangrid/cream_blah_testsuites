@@ -80,7 +80,7 @@ class CommandMng():
 
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ce_host, username=admin_name, password=admin_pass)
+        client.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
  
         print "running '%s'" % command
         ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command)
@@ -237,7 +237,7 @@ class Utils():
         #we will be adding it automatically to the list of known hosts
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
 
-        ssh.connect(ce_host, username=admin_name, password=admin_pass)
+        ssh.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
         ftp = ssh.open_sftp()
         try:
             ftp.stat(file_to_get)
@@ -270,7 +270,7 @@ class Utils():
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-        ssh.connect(self.my_ce_host, username = self.my_admin_name, password = self.my_admin_pass)
+        ssh.connect(self.my_ce_host, username = self.my_admin_name, password = self.my_admin_pass, allow_agent=False)
         sftp = ssh.open_sftp()
         sftp.put(local_file, remote_file)
         sftp.close()
@@ -295,7 +295,7 @@ class Utils():
         #we will be adding it automatically to the list of known hosts
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
 
-        ssh.connect(ce_host, username=admin_name, password=admin_pass)
+        ssh.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
         ftp = ssh.open_sftp()
         try:
             ftp.stat(remote_file)
