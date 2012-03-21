@@ -40,6 +40,7 @@ vo =
 dn = 
 ;
 # The user's submitting the jobs proxy password (e.g.: p4sSw0rD )
+# This parameter can be null if a proxy without password is used
 proxy_pass = 
 
 # Gridftp server used for data transfers (e.g.: se01.isabella.grnet.gr )

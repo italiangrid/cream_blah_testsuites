@@ -50,7 +50,7 @@ my_conf.checkIfParamIsNull('vo', vo)
 # The user's submitting the jobs proxy password (e.g.: p4sSw0rD )
 proxy_pass = my_conf.getParam('submission_info', 'proxy_pass')
 print " proxy_pass = " + proxy_pass
-my_conf.checkIfParamIsNull('proxy_pass', proxy_pass)
+#my_conf.checkIfParamIsNull('proxy_pass', proxy_pass)
 
 # Gridftp server used for data transfers (e.g.: se01.isabella.grnet.gr )
 gridftp_server = my_conf.getParam('submission_info', 'gridftp_server')
