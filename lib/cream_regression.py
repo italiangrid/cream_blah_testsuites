@@ -22,13 +22,13 @@ Implemented methods enumeration:
 1)  Exec Remote Command
 2)  get_remote_command_result
 3)  exec_cream_cli_command  
-4)  enable_submission
+#4)  enable_submission
 5)  check_allowed_submission
 6)  create_rfc_proxy
 7)  get_file_from_ce
 8)  get_cream_db_user_password_from_config
 9)  job_db_admin_purger_script_check
-10)  check_parameter
+10) check_parameter
 11) delete_job_from_batch_system
 12) job_status_should_be_in
 13) check_ce_GlueForeignKey_GlueCEUniqueID
@@ -138,21 +138,21 @@ def exec_local_command(command):
 
 ##############################################################################################################################
 ##############################################################################################################################
-def enable_submission(ce_endpoint):
-
-        '''
-                Description:    Enables the job submission in the given cream endpoint.
-                Arguments:      cream endpoint.
-                Returns:        glite-ce-enable-submission command output.
-        '''
-
-        com="/usr/bin/glite-ce-enable-submission %s" % ce_endpoint
-        ret=exec_cream_cli_command(com)
-        out = " ".join(ret)
-        out = out.strip()
-        out = out.replace (" ", "_")
-
-        return out
+#def enable_submission(ce_endpoint):
+#
+#        '''
+#                Description:    Enables the job submission in the given cream endpoint.
+#                Arguments:      cream endpoint.
+#                Returns:        glite-ce-enable-submission command output.
+#        '''
+#
+#        com="/usr/bin/glite-ce-enable-submission %s" % ce_endpoint
+#        ret=exec_cream_cli_command(com)
+#        out = " ".join(ret)
+#        out = out.strip()
+#        out = out.replace (" ", "_")
+#
+#        return out
 
 
 ##############################################################################################################################
@@ -197,6 +197,7 @@ def check_allowed_submission(ce_endpoint):
         out = "".join(ret)
         out = out.strip()
         out = out.replace (" ", "_")
+        out = out.lower()
 
         return out
 
@@ -393,6 +394,22 @@ def check_parameter(conf_f, param_to_check):
 
         return ret_val
 
+#############################################################################################################################
+##############################################################################################################################
+def check_parameter_value(conf_f, param_to_check):
+
+        '''
+            | Description: | This function searches if the parameter param_to_check is present |
+            |              | in the provided configuration file                                |    
+            | Arguments:   | param_to_check: name of the parameter to search                   |
+            |              | conf_f: file where search the parameter.                          |
+            | Returns:     | INITIALIZED, NOT_PRESENT, or NOT_INITIALIZED and parameter value  |
+        '''
+
+        my_utility = testsuite_utils.Utils()
+        ret_val, param_value = my_utility.check_param_in_conf_file(conf_f, param_to_check)
+
+        return ret_val, param_value
     
 #############################################################################################################################
 ##############################################################################################################################
@@ -480,7 +497,13 @@ def exec_jobDBAdminPurger_sh(db_usr_name, db_usr_pass, conf_f, options):
     '''
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
     catalina_home = my_conf.getParam('srv_environment','CATALINA_HOME')
-    com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s -u %s -p %s %s" % (catalina_home, conf_f, db_usr_name, db_usr_pass, options)
+    if middleware_version.lower() == "emi1":
+        com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s -u %s -p %s %s" % (catalina_home, conf_f, db_usr_name, db_usr_pass, options)
+    elif middleware_version.lower() == "emi2":
+        com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s %s" % (catalina_home, conf_f, options)
+    else:
+        raise _error('Invalid middleware version provided. Should be either "EMI1" or "EMI2", but you entered:"' + middleware_version + '"')
+
     print "Executing on CE the command : " + com
 
     myout, myerr = get_remote_command_result(com)
