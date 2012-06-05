@@ -14,18 +14,51 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cream_testsuite_conf
+import cream_testing
 
 my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
 
+# MIDDLEWARE
+# gLite middleware version to test (can be EMI1 or EMI2)
+middleware_version = my_conf.getParam('middleware', 'middleware_version')
+my_conf.checkIfParamIsNull('middleware_version', middleware_version)
+if (middleware_version == 'EMI1') or (middleware_version == 'EMI2'):
+    pass
+else:
+    raise _error('Middleware version NOT correctly set. Admitted values = EMI1 or EMI2')
+
+# BATCH_SYSTEM
+#The underlying batch system of the CREAM endpoint.Either pbs or lsf.
+batch_system = my_conf.getParam('batch_system', 'batch_sys')
+print " batch_system = " + batch_system
+my_conf.checkIfParamIsNull('batch_system', batch_system)
+
+batch_master_host = my_conf.getParam('batch_system', 'batch_master_host')
+my_conf.checkIfParamIsNull('batch_master_host', batch_master_host)
+
+batch_master_admin  = my_conf.getParam('batch_system', 'batch_master_admin')
+my_conf.checkIfParamIsNull('batch_master_admin', batch_master_admin)
+
+batch_master_admin_password = my_conf.getParam('batch_system', 'batch_master_admin_password')
+my_conf.checkIfParamIsNull('batch_master_admin_password', batch_master_admin_password)
+
+tot_cpu_num = my_conf.getParam('batch_system', 'tot_cpu_num')
+my_conf.checkIfParamIsNull('tot_cpu_num', tot_cpu_num)
+
+# CE SPECIFIC
+ce_admin_user = my_conf.getParam('ce_specific','cream_root_usr')
+print " ce_admin_user = " + ce_admin_user
+my_conf.checkIfParamIsNull('ce_admin_user', ce_admin_user)
+
+ce_admin_pass =  my_conf.getParam('ce_specific','cream_root_pass')
+print " ce_admin_pass = " + ce_admin_pass
+my_conf.checkIfParamIsNull('ce_admin_pass', ce_admin_pass)
+
+# SUBMISSION INFO
 # ce cream host
 ce_host = my_conf.getParam('submission_info', 'ce_host')
 print " ce_host = " + ce_host
 my_conf.checkIfParamIsNull('ce_host', ce_host)
-
-# Distinguish name of the user performing the tests (e.g.: /C=IT/O=INFN/OU=Personal Certificate/L=Padova/CN=Firstname Secondname")
-dn = my_conf.getParam('submission_info', 'dn')
-print " dn = " + dn
-my_conf.checkIfParamIsNull('dn', dn)
 
 # The cream endpoint to be used (e.g.: ctb04.gridctb.uoa.gr:8443 )
 ce_endpoint = my_conf.getParam('submission_info', 'ce_endpoint')
@@ -37,80 +70,21 @@ cream_queue = my_conf.getParam('submission_info', 'cream_queue')
 print " cream_queue = " + cream_queue
 my_conf.checkIfParamIsNull('cream_queue', cream_queue)
 
-# The CREAM endpoint in use for delegation (e.g.: https://ctb04.gridctb.uoa.gr:8443//ce-cream/services/gridsite-delegation )
-deleg_endpoint = my_conf.getParam('submission_info', 'deleg_endpoint')
-print " deleg_endpoint = " + deleg_endpoint
-my_conf.checkIfParamIsNull('deleg_endpoint', deleg_endpoint)
-
 # The user's submitting the jobs virtual organisation (e.g.: see )
 vo = my_conf.getParam('submission_info', 'vo')
 print " vo = " + vo
 my_conf.checkIfParamIsNull('vo', vo)
 
-# The user's submitting the jobs proxy password (e.g.: p4sSw0rD )
+# The user's submitting the jobs proxy password (e.g.: p4sSw0rD ). The proxy password can be null
 proxy_pass = my_conf.getParam('submission_info', 'proxy_pass')
 print " proxy_pass = " + proxy_pass
-#my_conf.checkIfParamIsNull('proxy_pass', proxy_pass)
 
-# Gridftp server used for data transfers (e.g.: se01.isabella.grnet.gr )
-gridftp_server = my_conf.getParam('submission_info', 'gridftp_server')
-print " gridftp_server = " + gridftp_server
-my_conf.checkIfParamIsNull('gridftp_server', gridftp_server)
-
-# LFC directory for data transfers. This directory will be created, it doesn't have to allready exist. Example: /grid/dteam/cream_testing
-lfn_dir = my_conf.getParam('submission_info', 'lfn_dir')
-print " lfn_dir = " + lfn_dir
-my_conf.checkIfParamIsNull('lfn_dir', lfn_dir)
-
-# A directory in the gridftp server.This directory has to allready exist and your vo have write access to it. Used for OSB file storage. Example: /tmp
-gridftp_dir = my_conf.getParam('submission_info', 'gridftp_dir')
-print " gridftp_dir = " + gridftp_dir
-my_conf.checkIfParamIsNull('gridftp_dir', gridftp_dir)
-
-# A delegation id string (e.g.: me_deleg_id )
-deleg_id = my_conf.getParam('submission_info', 'deleg_id')
-print " deleg_id = " + deleg_id
-my_conf.checkIfParamIsNull('deleg_id', deleg_id)
-
+# TESTSUITE BEHAVIOUR
 # The log level used during the test.Default is INFO.For extra output,set to DEBUG or TRACE.
 # (possible values: NONE FAIL WARN INFO DEBUG TRACE)
 log_level = my_conf.getParam('logger', 'robot_framework_log_level')
 print " log_level = " + log_level
 my_conf.checkIfParamIsNull('log_level', log_level)
-
-#The underlying batch system of the CREAM endpoint.Either pbs or lsf.
-batch_system = my_conf.getParam('batch_system', 'batch_sys')
-print " batch_system = " + batch_system
-my_conf.checkIfParamIsNull('batch_system', batch_system)
-
-# The hostname where TORQUE is running. Example: ctb07.gridctb.uoa.gr
-torque_host = my_conf.getParam('batch_system', 'torque_host')
-print " torque_host = " + torque_host
-my_conf.checkIfParamIsNull('torque_host', torque_host)
-
-# A user on the TORQUE host, who has job admin priviledges and ssh access to the machine. Example: root
-torque_admin_user = my_conf.getParam('batch_system', 'torque_admin_user')
-print " torque_admin_user = " + torque_admin_user
-my_conf.checkIfParamIsNull('torque_admin_user', torque_admin_user)
-
-# The aforementioned user's ssh password. Example: p4sSw0rD
-torque_admin_pass = my_conf.getParam('batch_system', 'torque_admin_pass')
-my_conf.checkIfParamIsNull('torque_admin_pass', torque_admin_pass)
-batch_master_host = my_conf.getParam('batch_system', 'batch_master_host')
-my_conf.checkIfParamIsNull('batch_master_host', batch_master_host)
-batch_master_admin  = my_conf.getParam('batch_system', 'batch_master_admin')
-my_conf.checkIfParamIsNull('batch_master_admin', batch_master_admin)
-batch_master_admin_password = my_conf.getParam('batch_system', 'batch_master_admin_password')
-my_conf.checkIfParamIsNull('batch_master_admin_password', batch_master_admin_password)
-
-# The hostname where the lrms is running. Example: ctb07.gridctb.uoa.gr
-lrms_host=batch_master_host
-
-# A user on the lrms host, who has job admin priviledges and ssh access to the machine. Example: root
-lrms_admin_user=batch_master_admin
-
-# The aforementioned user's ssh password. Example: p4sSw0rD
-lrms_admin_pass=batch_master_admin_password
 
 # The path in which temporary files will reside.
 # They will be automatically cleaned up unless you set the variable delete_files to "False" or explicitely don't run the cleanup test case.
@@ -126,22 +100,6 @@ my_conf.checkIfParamIsNull('tmp_dir', tmp_dir)
 delete_files = my_conf.getParam('testsuite_behaviour', 'delete_files')
 print " delete_files = " + delete_files
 my_conf.checkIfParamIsNull('delete_files', delete_files)
-
-# The cream host's root user's ssh password. Example: p4sSw0rD
-cream_root_pass = "cmsgrid"
-my_conf.checkIfParamIsNull('cream_root_pass', cream_root_pass)
-
-# Path to a second certificate
-sec_cert = my_conf.getParam('submission_info', 'sec_cert')
-print " sec_cert = " + sec_cert
-
-# Path to a second key
-sec_key = my_conf.getParam('submission_info', 'sec_key')
-print " sec_key = " + sec_key
-
-# Password for the second certificate
-sec_proxy_pass = my_conf.getParam('submission_info', 'sec_proxy_pass')
-print " sec_proxy_pass = " + sec_proxy_pass
 
 # CREAM CE configuration files
 ce_cream_xml = my_conf.getParam('cream-ce_conf_files', 'ce-cream.xml')
@@ -184,50 +142,9 @@ my_conf.checkIfParamIsNull('cream_sandbox_path', cream_sandbox_path)
 ce=ce_endpoint + "/" + cream_queue
 print " ce = " + ce
 
-# CE specific
-ce_admin_user = my_conf.getParam('ce_specific','cream_root_usr')
-print " ce_admin_user = " + ce_admin_user
-my_conf.checkIfParamIsNull('ce_admin_user', ce_admin_user)
-
-ce_admin_pass =  my_conf.getParam('ce_specific','cream_root_pass')
-print " ce_admin_pass = " + ce_admin_pass
-my_conf.checkIfParamIsNull('ce_admin_pass', ce_admin_pass)
-
-# The cream db host
-creamdb_host = my_conf.getParam('cream_db_params','creamdb_host')
-print " creamdb_host = " + creamdb_host
-my_conf.checkIfParamIsNull('creamdb_host', creamdb_host)
-
-#The cream db port
-creamdb_port = my_conf.getParam('cream_db_params','creamdb_port')
-print " creamdb_port = " + creamdb_port
-my_conf.checkIfParamIsNull('creamdb_port', creamdb_port)
-
-# The user to read the cream db
-creamdb_user = my_conf.getParam('cream_db_params','creamdb_user')
-print " creamdb_user = " + creamdb_user
-my_conf.checkIfParamIsNull('creamdb_user', creamdb_user)
-
-# The aforementioned user's db pass
-creamdb_pass = my_conf.getParam('cream_db_params','creamdb_pass')
-print " creamdb_pass = " + creamdb_pass
-my_conf.checkIfParamIsNull('creamdb_pass', creamdb_pass)
-
-# The authorization model in use. Either gjaf or argus
-authz_model = my_conf.getParam('cream_authorization','authz_model')
-print " authz_model = " + authz_model
-
-# The host of the argus service, if applicable
-argus_host = my_conf.getParam('cream_authorization','argus_host')
-print " argus_host = " + argus_host
-
-# Root user password for ssh access on argus host
-argus_root_pass = my_conf.getParam('cream_authorization','argus_root_pass')
-print " argus_root_pass = " + argus_root_pass 
- 
-if authz_model == "argus":
-    my_conf.checkIfParamIsNull('argus_host', argus_host)
-    my_conf.checkIfParamIsNull('argus_root_pass', argus_root_pass)
+# Distinguish name of the user performing the tests (e.g.: /C=IT/O=INFN/OU=Personal Certificate/L=Padova/CN=Firstname Secondname")
+dn = cream_testing.get_proxy_dn()
+print " dn = " + dn
 
 #########################################
 #
