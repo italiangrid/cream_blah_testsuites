@@ -133,6 +133,15 @@ my_conf.checkIfParamIsNull('blah_cream_concurrency_level', blah_cream_concurrenc
 my_conf.checkIfParamIsNull('blah_bupdater_loop_interval', blah_bupdater_loop_interval)
 my_conf.checkIfParamIsNull('blah_check_children_interval', blah_check_children_interval)
 
+# BLAH processes
+if middleware_version.lower() == "emi1":
+    bupdater_proc_prefix = "/usr/bin/BUpdater"
+    bnotifier_proc = "/usr/bin/BNotifier"
+elif middleware_version.lower() == "emi2":
+    bupdater_proc_prefix = "/usr/libexec/BUpdater"
+    bnotifier_proc = "/usr/libexec/BNotifier"
+# already checked that middleware_version can be only emi1 or emi2
+
 # CREAM configuration parameters names
 cream_sandbox_path = my_conf.getParam('cream_parameters', 'cream_sandbox_path')
 print " cream_sandbox_path = " + cream_sandbox_path
