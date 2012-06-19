@@ -497,6 +497,8 @@ def exec_jobDBAdminPurger_sh(db_usr_name, db_usr_pass, conf_f, options):
     '''
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
     catalina_home = my_conf.getParam('srv_environment','CATALINA_HOME')
+    middleware_version = my_conf.getParam('middleware', 'middleware_version')
+    com = ""
     if middleware_version.lower() == "emi1":
         com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s -u %s -p %s %s" % (catalina_home, conf_f, db_usr_name, db_usr_pass, options)
     elif middleware_version.lower() == "emi2":
@@ -534,7 +536,7 @@ def job_db_admin_purger_script_check(db_user_name, db_user_password, conf_f):
         myout, myerr = exec_jobDBAdminPurger_sh(db_user_name, db_user_password, conf_f, options)
         
         if myerr != "":
-                raise _error("Command " + com + " Failed\n" + "Command reported: " +  myerr)               
+                raise _error("job_db_admin_purger_script_check Failed\n" + " Reported: " +  myerr)               
         if re.search('START jobAdminPurger', myout) and re.search('STOP jobAdminPurger', myout):
                 return ret_val[0]
         else:
@@ -614,7 +616,11 @@ def run_yaim_func(site_info_file, func_to_run):
 
     my_utility = testsuite_utils.CommandMng()
 
-    my_utility.exec_remote_command(command)
+    out, err = my_utility.exec_remote_command(command)
+    print "Output:"
+    print out
+    print "Error:"
+    print err
 
 ###############################################################################
 ###############################################################################
@@ -852,19 +858,19 @@ def check_bug_83338(use_cemon_val):
         print "endpoint_type = %s" % endpoint_type
 
         if (use_cemon_val == "true"):
-            if endpoint_type == 3:
-                print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+            if endpoint_type == '3':
+                print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
                 return ret_val[0]
             else:
-                print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
                 return ret_val[1]
         else:
             if (use_cemon_val == "false"):
-                if endpoint_type == 2:
-                    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                if endpoint_type == '2':
+                    print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
                     return ret_val[0]
                 else:
-                    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+                    print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
                     return ret_val[1]
             else:
                 raise _error("Unknown value use_cemon=%s" % use_cemon_val)
