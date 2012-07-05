@@ -500,10 +500,13 @@ def exec_jobDBAdminPurger_sh(db_usr_name, db_usr_pass, conf_f, options):
     middleware_version = my_conf.getParam('middleware', 'middleware_version')
     com = ""
     if middleware_version.lower() == "emi1":
+        print "middleware_version = %s" % middleware_version.lower()
         com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s -u %s -p %s %s" % (catalina_home, conf_f, db_usr_name, db_usr_pass, options)
     elif middleware_version.lower() == "emi2":
+        print "middleware_version = %s" % middleware_version.lower()
         com = "export CATALINA_HOME=%s; /usr/sbin/JobDBAdminPurger.sh -c %s %s" % (catalina_home, conf_f, options)
     else:
+        print "middleware_version = %s" % middleware_version.lower()
         raise _error('Invalid middleware version provided. Should be either "EMI1" or "EMI2", but you entered:"' + middleware_version + '"')
 
     print "Executing on CE the command : " + com
