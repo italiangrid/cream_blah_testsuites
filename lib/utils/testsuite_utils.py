@@ -10,21 +10,18 @@ class CommandMng():
     my_conf = None
     my_ce_host = ""
     my_admin_name = ""
-    my_admin_pass = ""
+    tester_home = os.environ['HOME']
 
     def __init__(self):
         self.my_log = logging.getLogger('CommandMng')
         CommandMng.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
         CommandMng.my_ce_host = CommandMng.my_conf.getParam('submission_info','ce_host')
         CommandMng.my_admin_name = CommandMng.my_conf.getParam('ce_specific','cream_root_usr')
-        CommandMng.my_admin_pass = CommandMng.my_conf.getParam('ce_specific','cream_root_pass')
 
         if len(CommandMng.my_ce_host) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration")
         if len(CommandMng.my_admin_name) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
-        if len(CommandMng.my_admin_pass) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_pass is empty. Check testsuite configuration")
 
     def exec_command(self, command):
 
@@ -76,11 +73,14 @@ class CommandMng():
 
         ce_host = CommandMng.my_ce_host
         admin_name = CommandMng.my_admin_name
-        admin_pass = CommandMng.my_admin_pass
 
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
+        #In case the server's key is unknown,
+        #we will be adding it automatically to the list of known hosts
+        client.load_host_keys(os.path.expanduser(os.path.join(CommandMng.tester_home, ".ssh", "known_hosts")))
+
+        client.connect(ce_host, username=admin_name, key_filename=CommandMng.tester_home+"/.ssh/id_rsa")
  
         print "running '%s'" % command
         ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command)
@@ -129,21 +129,18 @@ class Utils():
     my_conf = None
     my_ce_host = ""
     my_admin_name = ""
-    my_admin_pass = ""
+    tester_home = os.environ['HOME']
 
     def __init__(self):
         self.my_log = logging.getLogger('Utils')
         Utils.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
         Utils.my_ce_host = Utils.my_conf.getParam('submission_info','ce_host')
         Utils.my_admin_name = Utils.my_conf.getParam('ce_specific','cream_root_usr')
-        Utils.my_admin_pass = Utils.my_conf.getParam('ce_specific','cream_root_pass')
        
         if len(Utils.my_ce_host) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration") 
         if len(Utils.my_admin_name) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
-        if len(Utils.my_admin_pass) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_pass is empty. Check testsuite configuration")
 
 
     def check_param_in_conf_file(self, conf_f, param_to_check):
@@ -228,16 +225,15 @@ class Utils():
       
         ce_host = Utils.my_ce_host
         admin_name = Utils.my_admin_name
-        admin_pass = Utils.my_admin_pass
 
         localpath = ""
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #In case the server's key is unknown,
         #we will be adding it automatically to the list of known hosts
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.load_host_keys(os.path.expanduser(os.path.join(Utils.tester_home, ".ssh", "known_hosts")))
 
-        ssh.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
+        ssh.connect(ce_host, username=admin_name,  key_filename=Utils.tester_home+"/.ssh/id_rsa")
         ftp = ssh.open_sftp()
         try:
             ftp.stat(file_to_get)
@@ -269,8 +265,8 @@ class Utils():
 
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-        ssh.connect(self.my_ce_host, username = self.my_admin_name, password = self.my_admin_pass, allow_agent=False)
+        ssh.load_host_keys(os.path.expanduser(os.path.join(Utils.tester_home, ".ssh", "known_hosts")))
+        ssh.connect(self.my_ce_host, username=self.my_admin_name, key_filename=Utils.tester_home+"/.ssh/id_rsa")
         sftp = ssh.open_sftp()
         sftp.put(local_file, remote_file)
         sftp.close()
@@ -287,15 +283,14 @@ class Utils():
 
         ce_host = Utils.my_ce_host
         admin_name = Utils.my_admin_name
-        admin_pass = Utils.my_admin_pass
 
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #In case the server's key is unknown,
         #we will be adding it automatically to the list of known hosts
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.load_host_keys(os.path.expanduser(os.path.join(Utils.tester_home, ".ssh", "known_hosts")))
 
-        ssh.connect(ce_host, username=admin_name, password=admin_pass, allow_agent=False)
+        ssh.connect(ce_host, username=admin_name, look_for_keys=True)
         ftp = ssh.open_sftp()
         try:
             ftp.stat(remote_file)
