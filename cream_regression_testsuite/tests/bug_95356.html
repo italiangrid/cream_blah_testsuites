@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+td.colspan4, th.colspan4 {
+    width: 48em;
+}
+td.colspan3, th.colspan3 {
+    width: 36em;
+}
+td.colspan2, th.colspan2 {
+    width: 24em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Bug 95356</title>
+</head>
+<body>
+<h1>Bug 95356</h1>
+<table border="1" id="setting">
+<tr>
+<th class="name" colspan="5">Setting</th>
+</tr>
+<tr>
+<td class="name">Documentation</td>
+<td class="colspan4" colspan="4">Regression test of bug #95356 Better parsing for static definition files in lcg-info-dynamic-scheduler.\n\nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_89153_JobDBAdminPurger_canno\n\nInsert in the file /var/lib/bdii/gip/ldif/ComputingShare.ldif an empty or corrupted attribute GLUE2PolicyRule (i.e. "GLUE2PolicyRule:" or "GLUE2PolicyRule: test").\n\nVerify that in the file /etc/lrms/scheduler.conf the attribute "outputformat" is set to glue2 or both.\n\nRun the command\n\n/var/lib/bdii/gip/plugin/glite-info-dynamic-scheduler-wrapper\n\nand verify that no exceptions are raised. \n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?95356\n\nRelevant CREAM task where released (task #31337: CREAM v. 1.14.1):\nhttps://savannah.cern.ch/task/?31337\n</td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>Temporary Files Location</td>
+<td>${tmp_dir}</td>
+<td># The directory in which the temporary test suite files will be stored.</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file</td>
+<td>${ce_cream_xml}</td>
+<td># Cream web application configuration file</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file cream-config.xml</td>
+<td>${cream_config_xml}</td>
+<td># CREAM configuration file cream-config.xml</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH Configuration file name</td>
+<td>${blah_config}</td>
+<td># BLAH Configuration file name</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH configuration parameter bupdater_loop_interval</td>
+<td>${blah_bupdater_loop_interval}</td>
+<td># BLAH configuration parameter bupdater_loop_interval</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_testing.py</td>
+<td># This is the main cream testing robot library,implemented as a python module.For more information,check the accompanied html documention (created with pydoc).</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Operating System</td>
+<td># Builtin "Operating System" library,providing keywords for interaction with the system.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Collections</td>
+<td># List and dictionary manipulating library</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Variables</td>
+<td>regression_vars.py</td>
+<td># This is the variables file</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_regression.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="variable">
+<tr>
+<th class="name" colspan="5">Variables</th>
+</tr>
+<tr>
+<td class="name">${local_saved_copy}</td>
+<td>${EMPTY}</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="testcase">
+<tr>
+<th class="name" colspan="5">Test Case</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Set Log Level">Set Log Level</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Set the log level used for the test suite. This changes the verbosity of the final test suite log files.</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>loglevel</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Log Level</td>
+<td>${log_level}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_bug_95356">bug_95356</a></td>
+<td>${local_copy_of_ComputingShare_ldif}</td>
+<td>Get File From CE</td>
+<td>/var/lib/bdii/gip/ldif/ComputingShare.ldif</td>
+<td>${tmp_dir}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Exec Local Command</td>
+<td>/bin/cp ${local_copy_of_ComputingShare_ldif} ${local_copy_of_ComputingShare_ldif}_save</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Suite Variable</td>
+<td>${local_saved_copy}</td>
+<td>${local_copy_of_ComputingShare_ldif}_save</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${result}=</td>
+<td>Check bug 95356</td>
+<td>${local_copy_of_ComputingShare_ldif}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should be Equal</td>
+<td>${result}</td>
+<td>SUCCESS</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Suite Teardown">Suite Teardown</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Restore original file on CREAM CE</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Put File On CE</td>
+<td>${local_saved_copy}</td>
+<td>/var/lib/bdii/gip/ldif/ComputingShare.ldif</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

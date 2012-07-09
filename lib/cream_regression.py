@@ -910,6 +910,39 @@ def check_bug_95552(ce_host):
         raise _error("Match for \"GLUE2EndpointURL: https://" + ce_host +  ":8443/ce-cream/services \" not found in \"\n" + "`" + com + "` output" + "\nBug not fixed.")
 
 
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_95356(local_copy_of_ComputingShare_ldif):
+
+    ret_val = ['SUCCESS', 'FAILED']
+
+    my_utility = testsuite_utils.Utils()
+    cmd_mng = testsuite_utils.CommandMng()
+
+    print "++++++++ Modify the file"
+    with open(local_copy_of_ComputingShare_ldif, "a") as myfile:
+        myfile.write("GLUE2PolicyRule:\n")
+
+    myfile.close()
+
+    print "++++++++ Put modified file on ce"
+    my_utility.put_file_on_ce(local_copy_of_ComputingShare_ldif, "/var/lib/bdii/gip/ldif/ComputingShare.ldif")
+
+    print "++++++++ Exec the test"
+
+    cmd = "/var/lib/bdii/gip/plugin/glite-info-dynamic-scheduler-wrapper"
+    try:
+        out, err = cmd_mng.exec_remote_command(cmd)
+        print "Output:"
+        print out
+        print "Error:"
+        print err
+        print "Test SUCCESSFULL"
+        return ret_val[0]
+    except:
+        print "Test FAILED"
+        return ret_val[1]
+
 
 
 
