@@ -13,6 +13,8 @@ import regression_vars
 
 class CreamConfigLayoutMng():
 
+    tester_home = os.environ['HOME']
+
     def __init__(self):
         
         '''
@@ -237,11 +239,5 @@ class CreamConfigLayoutMng():
             print "Failed executing : `" + com2 +  "`\n" + "".join(com2_out) + " Raise cream_configurator_exceptions.CreamConfiguratorError"
             raise cream_configurator_exceptions.CreamConfiguratorError("Failed executing : `" + com2 +  "`\n" + "".join(com2_out))
 
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-        ssh.connect(self.ce_host, username = self.admin_name, password = self.admin_pass)
-        sftp = ssh.open_sftp()
-        sftp.put(temp_file, file_name)
-        sftp.close()
+        self.my_utils.put_file_on_ce(temp_file, file_name)
 
