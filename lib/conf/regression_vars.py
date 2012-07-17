@@ -126,12 +126,15 @@ my_conf.checkIfParamIsNull('services_glite_creamce', services_glite_creamce)
 blah_cream_concurrency_level = my_conf.getParam('blah_parameters', 'blah_cream_concurrency_level')
 blah_bupdater_loop_interval = my_conf.getParam('blah_parameters', 'blah_bupdater_loop_interval')
 blah_check_children_interval = my_conf.getParam('blah_parameters', 'blah_check_children_interval')
+blah_bupdater_use_bhist_for_killed = my_conf.getParam('blah_parameters', 'blah_bupdater_use_bhist_for_killed')
 print " blah_cream_concurrency_level = " + blah_cream_concurrency_level
 print " blah_bupdater_loop_interval = " + blah_bupdater_loop_interval
 print " blah_check_children_interval = " + blah_check_children_interval
+print " blah_bupdater_use_bhist_for_killed = " + blah_bupdater_use_bhist_for_killed
 my_conf.checkIfParamIsNull('blah_cream_concurrency_level', blah_cream_concurrency_level)
 my_conf.checkIfParamIsNull('blah_bupdater_loop_interval', blah_bupdater_loop_interval)
 my_conf.checkIfParamIsNull('blah_check_children_interval', blah_check_children_interval)
+my_conf.checkIfParamIsNull('blah_bupdater_use_bhist_for_killed', blah_bupdater_use_bhist_for_killed)
 
 # BLAH processes
 if middleware_version.lower() == "emi1":
