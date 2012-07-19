@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+td.colspan4, th.colspan4 {
+    width: 48em;
+}
+td.colspan3, th.colspan3 {
+    width: 36em;
+}
+td.colspan2, th.colspan2 {
+    width: 24em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Bug 94414 Stronger</title>
+</head>
+<body>
+<h1>Bug 94414 Stronger</h1>
+<table border="1" id="setting">
+<tr>
+<th class="name" colspan="5">Setting</th>
+</tr>
+<tr>
+<td class="name">Documentation</td>
+<td class="colspan4" colspan="4">Regression test of bug #94414: BLParserLSF could crash if a suspend on an idle job is done.\n\nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_94414_BLParserLSF_could_cras\n\nTry to suspend a job whose status is "IDLE" and verify that the daemon BLParserLSF doesn't crash. \n\nNote: \nBecause the appearing of the bug was not systematic in the conditions proposed in the Test Plan, a stonger test has been developed. It submits jobs to load the batch system, it tries to suspend all submitted jobs (without carring about their status), it waits a bit, it tryes to resume all jobs (without carring about their status and operation result). The test is successful if at the end of the operation (waiting few time) all jobs are in DONE-OK status.\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?94414\n\nRelevant CREAM task where released (task #30328: BLAH v. 1.18.1):\nhttps://savannah.cern.ch/task/?30328\n</td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>Temporary Files Location</td>
+<td>${tmp_dir}</td>
+<td># The directory in which the temporary test suite files will be stored.</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file</td>
+<td>${ce_cream_xml}</td>
+<td># Cream web application configuration file</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>CREAM configuration file cream-config.xml</td>
+<td>${cream_config_xml}</td>
+<td># CREAM configuration file cream-config.xml</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH configuration parameter cream_concurrency_level</td>
+<td>${blah_cream_concurrency_level}</td>
+<td># BLAH configuration parameter cream_concurrency_level</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Metadata</td>
+<td>BLAH Configuration file name</td>
+<td>${blah_config}</td>
+<td># BLAH Configuration file name</td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_testing.py</td>
+<td># This is the main cream testing robot library,implemented as a python module.For more information,check the accompanied html documention (created with pydoc).</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Operating System</td>
+<td># Builtin "Operating System" library,providing keywords for interaction with the system.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>Collections</td>
+<td># List and dictionary manipulating library</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Variables</td>
+<td>regression_vars.py</td>
+<td># This is the variables file</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>cream_regression.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>blah_testing.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>blah_regression.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="variable">
+<tr>
+<th class="name" colspan="5">Variables</th>
+</tr>
+<tr>
+<td class="name">@{job_to_cancel}</td>
+<td>${empty}</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="testcase">
+<tr>
+<th class="name" colspan="5">Test Case</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Set Log Level">Set Log Level</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Set the log level used for the test suite. This changes the verbosity of the final test suite log files.</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>loglevel</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Log Level</td>
+<td>${log_level}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_bug_94414_stronger">bug_94414_stronger</a></td>
+<td>Create Proxy</td>
+<td>${proxy_pass}</td>
+<td>${vo}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${jdl_fname}</td>
+<td>Sleep Jdl</td>
+<td>${vo}</td>
+<td>150</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${tmp_dir}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${job_ids_list}</td>
+<td>Saturate Batch System</td>
+<td>${jdl_fname}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${cream_job_ids}</td>
+<td>Submit n Jobs</td>
+<td>10</td>
+<td>${jdl_fname}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${submitted_jobs}</td>
+<td>Combine Lists</td>
+<td>${job_ids_list}</td>
+<td>${cream_job_ids}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Suspend n Jobs</td>
+<td>${submitted_jobs}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Run</td>
+<td>sleep 90</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Suspend n Jobs</td>
+<td>${submitted_jobs}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Run</td>
+<td>sleep 90</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Resume n Jobs</td>
+<td>${submitted_jobs}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Run</td>
+<td>sleep 360</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${job_final_statuses}</td>
+<td>${failed_jobs}</td>
+<td>Get n Job Status</td>
+<td>${submitted_jobs}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>DONE-OK</td>
+<td>300</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${check_result}</td>
+<td>Check For Bug 94414</td>
+<td>${job_final_statuses}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should be equal</td>
+<td>${check_result}</td>
+<td>CHECK SUCCESSFUL</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

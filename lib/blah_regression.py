@@ -1,6 +1,8 @@
 import cream_regression
 import testsuite_utils
 import submission_thread
+import blah_testing
+import cream_testsuite_conf
 
 import re
 import subprocess
@@ -149,3 +151,53 @@ def monitor_ce_memory_while_submitting(job_num, sample_period, jdl_fname, submis
 
     return rss_matrix
 
+def check_for_bug_94414(jobs_list):
+    '''
+      | Description: | Given a dictionary of couples cream_job_id:job_status    |
+      |              | check if status is DONE-OK and if in blparser log file   |
+      |              | notifications for suspended and resumed jobs are present |
+      | Arguments:   | jobs_statuses | dictionary of couples                    |
+      |              | cream_job_id:job_status                                  |
+      | Returns:     | SUCCESS/FAILED                                           |
+      | Exceptions:  |                                                          |
+    '''
+
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+    final_ret_val = ret_val[0]
+
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    output_dir = my_conf.getParam('testsuite_behaviour','tmp_dir')
+
+    print "Getting final jobs status ... "
+    jobs_final_states, failed_jobs = cream_regression.get_n_job_status(jobs_list, "DONE-OK", 200)
+
+    keys = jobs_final_states.keys()
+    for index in keys:
+       print "Job " + str(index) + " --- " + jobs_final_states[index]
+
+    if len(failed_jobs) == 0:
+        print "Statuses check successful"
+        final_ret_val = ret_val[0]
+    else:
+        print "Statuses check failed"
+        final_ret_val =  ret_val[1]
+
+    # Check also blparser notifications because cream has a mechanism to detect job done independently by blparser
+    blparser_log = blah_testing.get_blah_parser_log_file_name()
+    local_blah_parser_log_file = cream_regression.get_file_from_ce(blparser_log, output_dir)
+    for cream_job_id in keys:
+        batch_job_id = blah_testing.get_job_num_from_jid(cream_job_id)
+        notifications_list = blah_testing.get_notifications_in_blah_parser_log(local_blah_parser_log_file, batch_job_id)
+        result = blah_testing.check_notifications_for_normally_finished(notifications_list)
+        if result == 'NOTIFICATIONS OK':
+            print "Notifications check successful for job " + cream_job_id
+        else:
+            print "Notifications failure for job " + cream_job_id
+            final_ret_val =  ret_val[1]
+
+    return final_ret_val
+
+
+
+
+    

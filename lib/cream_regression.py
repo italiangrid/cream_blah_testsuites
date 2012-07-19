@@ -254,6 +254,93 @@ def create_rfc_proxy(password, vo, cert=None, key=None, time=None):
 
 #############################################################################################################################
 ##############################################################################################################################
+def get_n_job_status(jobs_id_list, expected_status, timeout=200):
+    '''
+        | Description:    | Wait for a fixed time (timeout defaulted in 200s) that jobs received as input (jobs_id_list) |
+        |                 | gain the expected status and return a dictionary of pairs job_id:final_status                |
+        | Arguments:      | jobs_id_list    | list of job ids of jobs to check.                                          |
+        |                 | expected_status | status to be rached by jobs                                                |
+        |                 | waith thath job job_id reach expected status for a given time, then the job is treated as    |
+        |                 | failed.                                                                                      |
+        | Returns:        | a dictionary of pairs job_id:final_status  and a list of failed jobs                         |
+        | Exceptions:     |                                                                                              |
+    '''
+    print "Getting jobs status ... "
+    print "Job list = " 
+    print jobs_id_list
+    print "Expected status = " + expected_status
+    jobs_final_states = {}
+    failed_jobs = list()
+    final_job_status = ""
+    for item in jobs_id_list:
+        try:
+            final_job_status = cream_testing.wait_for_status(item, expected_status, timeout)
+            final_job_status = cream_testing.get_current_status(item) 
+            print "Job " + str(item) + " successful with status = " + final_job_status
+            jobs_final_states[item] = final_job_status
+        except:
+            final_job_status = cream_testing.get_current_status(item)
+            print "Job " + str(item) + " failed with status " + final_job_status
+            jobs_final_states[item] = final_job_status
+            failed_jobs.append(item)
+
+    print "Final jobs state"
+    print jobs_final_states
+    print "Failed jobs"
+    print failed_jobs
+    return jobs_final_states, failed_jobs
+
+#############################################################################################################################
+##############################################################################################################################
+def suspend_n_jobs(jobs_to_suspend):
+    '''
+        | Description:    | Try to suspend jobs received as input. If the operation fails, a list of jobs not suspended  |
+        |                 | is returned.                                                                                 |
+        | Arguments:      | jobs_to_suspend | a list of cream job ids.                                                   |
+        | Returns:        | a list of job ids corresponding to failures in suspend operation. Prints the errors.         |
+        | Exceptions:     |                                                                                              |
+    '''
+    failed_jobs = list()
+
+    print "Try to suspend all jobs"
+    for item in jobs_to_suspend:
+        try:
+            cream_testing.suspend_job(item)
+        except Exception as e:
+            print "Caught an exception trying to suspend job " 
+            print item
+            print e
+            failed_jobs.append(item)
+
+    return failed_jobs
+
+#############################################################################################################################
+##############################################################################################################################
+def resume_n_jobs(jobs_to_resume):
+    '''
+        | Description:    | Try to resume  jobs received as input. If the operation fails, a list of jobs not resumed    |
+        |                 | is returned.                                                                                 |
+        | Arguments:      | jobs_to_resume | a list of cream job ids.                                                    |
+        | Returns:        | a list of job ids corresponding to failures in resume  operation. Prints the errors.         |
+        | Exceptions:     |                                                                                              |
+    '''
+    failed_jobs = list()
+
+    print "Resuming jobs ..."
+    for item in jobs_to_resume:
+        try:
+            cream_testing.resume_job(item)
+        except Exception as e:
+            print "Caught an exception trying to resuming job "
+            print item
+            print e
+            failed_jobs.append(item)
+
+    return failed_jobs
+
+
+#############################################################################################################################
+##############################################################################################################################
 def create_jdl_87492(vo, output_dir):
     '''
         | Description:    | Create a jdl specific to test bug #87492              |
@@ -383,7 +470,7 @@ def check_parameter(conf_f, param_to_check):
 
         '''
             | Description: | This function searches if the parameter param_to_check is present |
-            |              | in the provided configuration file                                |    
+            |              | in the (locally) provided configuration file                      |    
             | Arguments:   | param_to_check: name of the parameter to search                   |
             |              | conf_f: file where search the parameter.                          |
             | Returns:     | INITIALIZED, NOT_PRESENT, or NOT_INITIALIZED                      |

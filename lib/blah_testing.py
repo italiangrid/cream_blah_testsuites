@@ -148,9 +148,27 @@ def check_notifications_for_resumed(notifications_list):
     else:
          return ret_val[1]
 
+def check_notifications_for_suspended(notifications_list):
+    '''
+       | Description: | Given a list of notifications received as input, checks if it is       |
+       |              | acceptable as notification list for a job suspended and resumed, i.e.: |
+       |              | * A notification with JobStatus=1 (this can be missing)                |
+       |              | * A notification with JobStatus=2 (this can be missing)                |
+       |              | * A notification with JobStatus=5 (this must be there)                 |
+       |              | Verify ONLY if arrive the notifications 5 (=suspended)                 |
+       | Arguments:   | notifications_list | a list of notifications                           |
+       | Returns:     | 'NOTIFICATIONS OK'/''NOTIFICATIONS FAILURE'                            |
+       | Exceptions:  |                                                                        | 
+    '''
+
+    ret_val = ['NOTIFICATIONS OK', 'NOTIFICATIONS FAILURE']
+    if ("5" in notifications_list):
+         return ret_val[0]
+    else:
+         return ret_val[1]
 
 
-def saturate_batch_system():
+def saturate_batch_system(jdl_file_name='empty'):
     '''
        | Description: | Reads from test suite configuration file the value of total CPU number |
        |              | present in the batch cluster and submits a number of jobs equal to     |
@@ -176,24 +194,53 @@ def saturate_batch_system():
         raise testsuite_exception.TestsuiteError("Mandatory parameter tot_cpu_num is empty. Check testsuite configuration")
     if len(vo) == 0:
         raise testsuite_exception.TestsuiteError("Mandatory parameter vo is empty. Check testsuite configuration")
+    if len(output_dir) == 0:
+        raise testsuite_exception.TestsuiteError("Mandatory parameter tmp_dir is empty. Check testsuite configuration")
+        
+    print "Creating proxy ..."
+    cream_testing.create_proxy(proxy_pass, vo)
+
+    jdl_fname = ""
+    if jdl_file_name == 'empty':
+        print "Creating jdl"
+        jdl_fname = cream_testing.sleep_jdl(vo, "300", output_dir)
+    else:
+        jdl_fname = jdl_file_name
+
+    print "Submitting " + tot_cpu_in_batch_cluster + " jobs ..."
+    cream_job_ids = list()
+    cream_job_ids = submit_n_jobs(tot_cpu_in_batch_cluster, jdl_fname)
+     
+    print cream_job_ids
+
+    return cream_job_ids
+
+#############################################################################################################################
+##############################################################################################################################
+def submit_n_jobs(jobs_num, jdl_fname):
+    '''
+        | Description:    | Send jobs_num jobs                                   |
+        | Arguments:      | jobs_num  | number of jobs to send                   |
+        |                 | jdl_fname | jdl file to submit                       |
+        | Returns:        | the job_ids list pf submitted jobs                   |
+        | Exceptions:     |                                                      |
+    '''
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    ce_endpoint = my_conf.getParam('submission_info','ce_endpoint')
+    cream_queue = my_conf.getParam('submission_info', 'cream_queue')
+
     if len(ce_endpoint) == 0:
         raise testsuite_exception.TestsuiteError("Mandatory parameter ce_endpoint is empty. Check testsuite configuration")
     if len(cream_queue) == 0:
         raise testsuite_exception.TestsuiteError("Mandatory parameter cream_queue is empty. Check testsuite configuration")
-    if len(output_dir) == 0:
-        raise testsuite_exception.TestsuiteError("Mandatory parameter tmp_dir is empty. Check testsuite configuration")
+    
+    ce = ce_endpoint + "/" + cream_queue
 
-    print "Creating proxy ..."
-    cream_testing.create_proxy(proxy_pass, vo)
-    print "Creating jdl"
-    jdl_fname = cream_testing.sleep_jdl(vo, "300", output_dir)
-
+    print "send " + str(jobs_num) + " jobs"
     cream_job_ids = list()
-    for i in range(int(tot_cpu_in_batch_cluster)):
+    for i in range(int(jobs_num)):
         cream_job_id = cream_testing.submit_job(jdl_fname, ce)
         cream_job_ids.append(cream_job_id)
-     
-    print cream_job_ids
 
     return cream_job_ids
 
@@ -206,7 +253,10 @@ def cancel_list_of_jobs(job_ids_list):
       | Exceptions:  |                                                      |
     '''
 
-    for cream_job_id in job_ids_list:
-        cream_testing.cancel_job(cream_job_id)
+    if not job_ids_list:
+        print "No jobs to cancel"
+    else:
+        for cream_job_id in job_ids_list:
+            cream_testing.cancel_job(cream_job_id)
 
-
+        
