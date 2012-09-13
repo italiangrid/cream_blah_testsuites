@@ -102,7 +102,16 @@ print " delete_files = " + delete_files
 my_conf.checkIfParamIsNull('delete_files', delete_files)
 
 # CREAM CE configuration files
-ce_cream_xml = my_conf.getParam('cream-ce_conf_files', 'ce-cream.xml')
+if middleware_version.lower() == "emi1":
+    print "middleware_version = %s" % middleware_version.lower()
+    ce_cream_xml = my_conf.getParam('cream-ce_conf_files', 'ce-cream.xml_EMI1')
+elif middleware_version.lower() == "emi2":
+    print "middleware_version = %s" % middleware_version.lower()
+    ce_cream_xml = my_conf.getParam('cream-ce_conf_files', 'ce-cream.xml_EMI2')
+else:
+    print "middleware_version = %s" % middleware_version.lower()
+    raise _error('Invalid middleware version provided. Should be either "EMI1" or "EMI2", but you entered:"' + middleware_version + '"')
+
 cream_config_xml = my_conf.getParam('cream-ce_conf_files', 'cream-config.xml')
 print " ce_cream_xml = " + ce_cream_xml
 print " cream_config_xml = " + cream_config_xml
