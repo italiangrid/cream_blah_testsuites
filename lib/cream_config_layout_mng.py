@@ -2,6 +2,7 @@ import logging
 import cream_testsuite_conf
 import testsuite_utils
 import cream_testsuite_exception
+import regression_vars
 import shlex
 import re
 import os
@@ -9,7 +10,6 @@ import subprocess
 import paramiko
 import datetime
 import os
-import regression_vars
 
 class CreamConfigLayoutMng():
 
@@ -52,9 +52,10 @@ class CreamConfigLayoutMng():
               | Exceptions:     |                                                                     |
         '''
 
-        config_file_name = self.my_conf.getParam('cream-ce_conf_files', 'ce-cream.xml')
+        config_file_name = regression_vars.ce_cream_xml
         print "Configuration file where search : " + config_file_name
         config_file = self.my_utils.get_file_from_ce(config_file_name, self.output_dir)
+        print "Configuration file where search : " + config_file
         if len(config_file) == 0:
             print "File " + config_file + " NOT FOUND on " + self.ce_host
             raise cream_testsuite_exception.CreamTestsuiteError("File " + config_file + " NOT FOUND on " + self.ce_host)
