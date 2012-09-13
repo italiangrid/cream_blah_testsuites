@@ -40,6 +40,7 @@ Implemented methods enumeration:
 import subprocess , shlex , os , sys , time , datetime , re , string , paramiko
 from string import Template
 import batch_sys_mng, cream_testing, testsuite_utils, cream_config_layout_mng, cream_testsuite_conf
+import regression_vars
 
 class _error(Exception):
 
@@ -625,8 +626,9 @@ def job_db_admin_purger_script_check(db_user_name, db_user_password, conf_f):
         
         myout, myerr = exec_jobDBAdminPurger_sh(db_user_name, db_user_password, conf_f, options)
         
-        if myerr != "":
-                raise _error("job_db_admin_purger_script_check Failed\n" + " Reported: " +  myerr)               
+        # Commented because the script has a not empty error string also when it is correctly running
+        #if myerr != "":
+        #        raise _error("job_db_admin_purger_script_check Failed\n" + " Reported: " +  myerr)               
         if re.search('START jobAdminPurger', myout) and re.search('STOP jobAdminPurger', myout):
                 return ret_val[0]
         else:
@@ -829,6 +831,18 @@ def job_status_should_be_in(cream_job_id, statuses_list):
         if status not in statuses_list:
                  raise _error("Expected status should be in " + right_otput_str_list + " for job " + cream_job_id + " was actually " + status)
 
+
+#############################################################################################################################
+##############################################################################################################################
+def append_string_to_file_on_ce(file_to_which_append, string_to_be_appended, output_location):
+
+    my_utility = testsuite_utils.Utils()
+    print "file_to_which_append = " + file_to_which_append
+    print "string_to_be_appended = " + string_to_be_appended
+    print "output_location = " + output_location
+    return my_utility.append_string_to_file_on_ce(file_to_which_append, string_to_be_appended, output_location)
+
+
 #############################################################################################################################
 ##############################################################################################################################
 def check_ce_GlueForeignKey_GlueCEUniqueID(ce_host):
@@ -989,7 +1003,7 @@ def check_bug_95552(ce_host):
         raise _error("Command " + com + " Returned error: " + err)
 
     exp = re.compile("GLUE2EndpointURL: https://" + ce_host + ":8443/ce-cream/services")
-    res = exp.match(out)
+    res = exp.search(out)
     if res:
         print 'Match found: ', res.group()
     else:
@@ -1031,6 +1045,59 @@ def check_bug_95356(local_copy_of_ComputingShare_ldif):
         return ret_val[1]
 
 
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_59871():
 
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    ce_host = my_conf.getParam('submission_info','ce_host')
 
+    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b mds-vo-name=resource,o=grid | grep -i GlueHostApplicationSoftwareRunTimeEnvironment"
 
+    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "mds-vo-name=resource,o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p2 = subprocess.Popen(["grep", "-i", "GlueHostApplicationSoftwareRunTimeEnvironment"], stdin=p1.stdout, stdout=subprocess.PIPE)
+
+    p2.wait()
+
+    fPtr=p2.stdout
+    output=fPtr.readlines()
+    output=" ".join(output)
+
+    fPtrErr1=p1.stderr
+    error=fPtrErr1.readlines()
+    error=" ".join(error)
+
+    if len(error) != 0:
+        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
+
+    if len(output) == 0:
+        raise _error("'" + com  + "'" + "Failed: output empty")
+
+    print "Risultato di ldapsearch:"
+    print output
+
+    check_result = "OK"
+    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag1", output)
+    if res:
+        print 'Match found: ', res.group()
+    else:
+        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag1'
+        check_result = "KO"
+
+    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag2", output)
+    if res:
+        print 'Match found: ', res.group()
+    else:
+        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag2'
+        check_result = "KO"
+
+    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag3", output)
+    if res:
+        print 'Match found: ', res.group()
+    else:
+        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag3'
+        check_result = "KO"
+
+    print "check_bug_59871 result = " + check_result
+    return check_result
+   
