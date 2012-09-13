@@ -55,10 +55,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">Documentation</td>
-<td class="colspan4" colspan="4">Test that notifications are sent for cancelled jobs.\nIt can be used with both old and new blparser, configuring the right way the testsuite.\n\nSubmit this JDL to a CREAM-CE using the glite-ce-job-submit command:\n\nglite-ce-job-submit -a -r &lt;CEId&gt; test1.jdl\n\ncat test1.jd:\n[\nexecutable="/bin/sleep";\narguments="100";\n]\n\nThen cancels the job with glite-ce-job-cancel.\n\nAfter the job is actually cancelled (it must be needed to then wait for a couple of minutes), check the log file /var/log/cream/glite-xxxparser.log. For the relevant job there should be:\n\n<br>
-* A notification with JobStatus=1 (this can be missing)\n<br>
-* A notification with JobStatus=2 (this can be missing)\n<br>
-* A notification with JobStatus=3 (this must be there)</td>
+<td class="colspan4" colspan="4">Bug #94519 (Updater for LSF can misidentify killed jobs as finished)\n\nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_94519_Updater_for_LSF_can_mi\n\nVerify that the value for bupdater_use_bhist_for_killed is set to yes, submit and cancel a job and verify that the status of the job reports a "jobstatus=3" \n\nSavannah bug reference: \nhttps://savannah.cern.ch/bugs/?59871 \n\nRelevant BLAH tasks where released:\ntask #30327, BLAH v. 1.16.6 : <a href="https://savannah.cern.ch/task/?30327\ntask">https://savannah.cern.ch/task/?30327\ntask</a> #30328, BLAH v. 1.18.1 : <a href="https://savannah.cern.ch/task/?30328\n\n\n">https://savannah.cern.ch/task/?30328\n\n\n</a></td>
 </tr>
 <tr>
 <td class="name">Metadata</td>
@@ -199,15 +196,15 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Should be equal</td>
-<td>${param_value}</td>
-<td>yes</td>
+<td>${res}</td>
+<td>INITIALIZED</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Should be equal</td>
-<td>${res}</td>
-<td>INITIALIZED</td>
+<td>${param_value}</td>
+<td>yes</td>
 <td></td>
 </tr>
 <tr>
