@@ -1,4 +1,4 @@
-import sys, os, subprocess, shlex, re 
+import sys, os, subprocess, shlex, re, shutil 
 import logging
 import paramiko
 import cream_testsuite_exception
@@ -307,3 +307,35 @@ class Utils():
         ssh.close()
 
         return ret_val
+
+
+    def append_string_to_file_on_ce(self, remote_file_name, string_to_append, outputdir):
+
+        '''
+            | Description: | Get a local copy of remote_file_name, make a backup copy,      |
+            |              | append string_to_append to the local copy of remote_file_name  |
+            |              | and put the modified file on ce                                |
+            | Arguments:   | remote_file_name | full path name                              |
+            |              | string_to_append | content to append to the remote file        |
+            |              | outputdir        | local working directory                     |
+            | Returns:     | full path name of modified file and backup copy                |
+            | Exceptions:  |                                                                |
+        '''
+
+
+        print "file_to_get_and_modify: " + remote_file_name
+
+        local_copy_of_file = self.get_file_from_ce(remote_file_name, outputdir)
+
+        print "Conf file = " + local_copy_of_file
+        local_copy_of_file_saved = local_copy_of_file + ".save"
+
+        shutil.copyfile(local_copy_of_file, local_copy_of_file_saved)
+
+
+        with open(local_copy_of_file, "a") as myfile:
+            myfile.write(string_to_append)
+
+        self.put_file_on_ce(local_copy_of_file, remote_file_name)
+
+        return local_copy_of_file, local_copy_of_file_saved
