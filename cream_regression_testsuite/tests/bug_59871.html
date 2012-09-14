@@ -135,6 +135,32 @@ td.name, th.name {
 <td></td>
 </tr>
 </table>
+<table border="1" id="variable">
+<tr>
+<th class="name" colspan="5">Variables</th>
+</tr>
+<tr>
+<td class="name">${remote_path}</td>
+<td>${EMPTY}</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">${local_copy}</td>
+<td>${EMPTY}</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 <table border="1" id="testcase">
 <tr>
 <th class="name" colspan="5">Test Case</th>
@@ -202,6 +228,20 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Set Suite Variable</td>
+<td>${remote_path}</td>
+<td>${file_name}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Suite Variable</td>
+<td>${local_copy}</td>
+<td>${local_copy_of_file_saved}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Run</td>
 <td>sleep 200</td>
 <td></td>
@@ -219,6 +259,46 @@ td.name, th.name {
 <td>Should be equal</td>
 <td>${result}</td>
 <td>OK</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Simple Teardown</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Teardown">Teardown</a></td>
+<td>Put File on CE</td>
+<td>${local_copy}</td>
+<td>${remote_path}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="keyword">
+<tr>
+<th class="name" colspan="5">Keywords</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Simple Teardown">Simple Teardown</a></td>
+<td>Put File on CE</td>
+<td>${local_copy}</td>
+<td>${remote_path}</td>
 <td></td>
 </tr>
 <tr>
