@@ -1040,8 +1040,9 @@ def check_bug_95356(local_copy_of_ComputingShare_ldif):
         print err
         print "Test SUCCESSFULL"
         return ret_val[0]
-    except:
-        print "Test FAILED"
+    except Exception as e:
+        print "Test FAILED with exception:"
+        print e
         return ret_val[1]
 
 
