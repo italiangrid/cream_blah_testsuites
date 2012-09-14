@@ -83,7 +83,7 @@ class CommandMng():
         client.connect(ce_host, username=admin_name, key_filename=CommandMng.tester_home+"/.ssh/id_rsa")
  
         print "running '%s'" % command
-        ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command)
+        ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command + '| echo $?')
     
         exit_status = ssh_stdout.channel.recv_exit_status()
         print "Command %s on ce %s exit status: %s" % (command, ce_host, exit_status)
