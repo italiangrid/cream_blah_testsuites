@@ -55,8 +55,8 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">Documentation</td>
-<td class="colspan4" colspan="4">Regression test of bug #87361 The attribute cream_concurrency_level should be configurable via yaim.\n\nTest Description:\nhttp://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_87361_The_attribute_cream_co\n\nTo test the fix, set in seiteinfo.def the variable CREAM_CONCURRENCY_LEVEL to a certain number (n). After configuration verify that in /etc/glite-ce-cream/cream-config.xml there is:\n\n<br>
-cream_concurrency_level="n"\n\navanah bug reference:\nhttps://savannah.cern.ch/bugs/?87361\n\nRelevant CREAM task where released (task #21059: CREAM v. 1.14):\nhttps://savannah.cern.ch/task/?21059\n</td>
+<td class="colspan4" colspan="4">Regression test of bug #87361 The attribute cream_concurrency_level should be configurable via yaim.\n\nTest Description:\nhttp://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_87361_The_attribute_cream_co\n\nTo test the fix, set in seiteinfo.def the variable CREAM_CONCURRENCY_LEVEL to a certain number (n). After configuration verify that in /etc/glite-ce-cream/cream-config.xml there is:\nIn CREAM EMI1:\n<br>
+cream_concurrency_level="n"\nIn CREAM EMI2:\ncommandworkerpoolsize="n"\nin section &lt;commandexecutor id="BLAH executor"\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?87361\n\nRelevant CREAM task where released (task #21059: CREAM v. 1.14):\nhttps://savannah.cern.ch/task/?21059\n</td>
 </tr>
 <tr>
 <td class="name">Metadata</td>
@@ -77,13 +77,6 @@ cream_concurrency_level="n"\n\navanah bug reference:\nhttps://savannah.cern.ch/b
 <td>CREAM configuration file cream-config.xml</td>
 <td>${cream_config_xml}</td>
 <td># CREAM configuration file cream-config.xml</td>
-<td></td>
-</tr>
-<tr>
-<td class="name">Metadata</td>
-<td>BLAH configuration parameter cream_concurrency_level</td>
-<td>${blah_cream_concurrency_level}</td>
-<td># BLAH configuration parameter cream_concurrency_level</td>
 <td></td>
 </tr>
 <tr>
@@ -168,23 +161,112 @@ cream_concurrency_level="n"\n\navanah bug reference:\nhttps://savannah.cern.ch/b
 </tr>
 <tr>
 <td class="name"><a name="test_bug_87361">bug_87361</a></td>
-<td>${blah_conf_file_copy}=</td>
+<td>${cream_concurrency_level_old}</td>
+<td>Get Cream Concurrency Level from Yaim Conf</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${local_copy_of_services}</td>
+<td>Get File from CE</td>
+<td>${services_glite_creamce}</td>
+<td>${tmp_dir}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Suite Variable</td>
+<td>${saved_services_file}</td>
+<td>${local_copy_of_services}_save</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Exec Local Command</td>
+<td>cp ${local_copy_of_services} ${saved_services_file}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${cream_concurrency_level_new}</td>
+<td>Evaluate</td>
+<td>int(${cream_concurrency_level_old})+50</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${cream_concurrency_level_new_str}</td>
+<td>Evaluate</td>
+<td>str(${cream_concurrency_level_new})</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Change Conf Param in File</td>
+<td>${services_glite_creamce}</td>
+<td>${cream_concurrency_level_yaim_name}</td>
+<td>${cream_concurrency_level_new_str}</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Configure CE by Yaim</td>
+<td>${site_info}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${cream_config_xml_file_copy}=</td>
 <td>Get File From Ce</td>
-<td>${blah_config}</td>
+<td>${cream_config_xml}</td>
 <td>${tmp_dir}</td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>${res}</td>
-<td>Check Parameter</td>
-<td>${blah_conf_file_copy}</td>
-<td>${blah_cream_concurrency_level}</td>
+<td>Check Bug 87361</td>
+<td>${cream_config_xml_file_copy}</td>
+<td>${cream_concurrency_level_new_str}</td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Should be equal</td>
 <td>${res}</td>
-<td>INITIALIZED</td>
+<td>SUCCESS</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Teardown</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table border="1" id="keyword">
+<tr>
+<th class="name" colspan="5">Keywords</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Teardown">Teardown</a></td>
+<td>Put File on CE</td>
+<td>${saved_services_file}</td>
+<td>${services_glite_creamce}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Configure CE by Yaim</td>
+<td>${site_info}</td>
+<td></td>
 <td></td>
 </tr>
 <tr>

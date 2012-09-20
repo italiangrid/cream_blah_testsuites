@@ -76,7 +76,6 @@ services-glite-creamce.post = /opt/glite/yaim/defaults/glite-creamce.post
 node-file = 
 ;
 [blah_parameters]
-blah_cream_concurrency_level = cream_concurrency_level
 blah_bupdater_loop_interval = bupdater_loop_interval
 blah_check_children_interval = blah_check_children_interval
 blah_bupdater_use_bhist_for_killed = bupdater_use_bhist_for_killed 
@@ -84,6 +83,11 @@ blah_bupdater_use_bhist_for_killed = bupdater_use_bhist_for_killed
 [cream_parameters]
 cream_sandbox_path = CREAM_SANDBOX_PATH
 glite_cream_location_var = GLITE_CREAM_LOCATION_VAR
+cream_concurrency_level_yaim_name = CREAM_CONCURRENCY_LEVEL
+; EMI2:
+cream_concurrency_level_EMI2 = commandworkerpoolsize
+; EMI1:
+cream_concurrency_level_EMI1 = cream_concurrency_level 
 ;
 ; ONLY for blah testsuite
 [blah_specific]

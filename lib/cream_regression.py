@@ -556,6 +556,18 @@ def get_cream_sandbox_from_yaim_conf():
 
     return final_cream_sandbox_path
 
+
+#############################################################################################################################
+##############################################################################################################################
+def get_cream_concurrency_level_from_yaim_conf():
+
+    cream_concurrency_level_name = regression_vars.cream_concurrency_level_yaim_name
+    print "cream_concurrency_level_name = " + cream_concurrency_level_name
+    cream_concurrency_level_value = get_yaim_param(cream_concurrency_level_name)
+    print "cream_concurrency_level_value = " + cream_concurrency_level_value 
+
+    return cream_concurrency_level_value
+
 #############################################################################################################################
 ##############################################################################################################################
 def get_cream_db_user_password_from_config():
@@ -1102,3 +1114,63 @@ def check_bug_59871():
     print "check_bug_59871 result = " + check_result
     return check_result
    
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_87361(config_file, cream_concurrency_level_val):
+
+    ret_val = ['SUCCESS', 'FAILED']
+
+    print "Configuration file name = " + config_file
+
+    # Open configuration file
+    try:
+        in_file = open(config_file,"r")
+    except Exception as exc:
+        print "Error opening file " + config_file
+        self.my_log.error(exc)
+        raise cream_testsuite_exception.CreamTestsuiteError("Error opening file " + config_file)
+
+    # Configure the xml tag (tag_to_search) to search depending on EMI version
+    str_to_search = regression_vars.cream_concurrency_level + "=\"" + str(cream_concurrency_level_val) +"\""
+    print "String to search = " + str_to_search
+    tag_to_search = ""
+    if regression_vars.middleware_version.lower() == "emi1":
+        print "middleware_version = %s" % regression_vars.middleware_version.lower()
+        tag_to_search = '<service id=\"CREAM service '
+    elif regression_vars.middleware_version.lower() == "emi2":
+        print "middleware_version = %s" % regression_vars.middleware_version.lower()
+        tag_to_search = '<commandexecutor id=\"BLAH executor\"'
+    else:
+        print "middleware_version = %s" % regression_vars.middleware_version.lower()
+        raise _error('Invalid middleware version provided. Should be either "EMI1" or "EMI2", but you entered:"' + regression_vars.middleware_version + '"')
+
+    # Select the piece of the file where search the parameter
+    str_where_search = ""
+    found = False
+    while True :
+        in_line = in_file.readline()
+        if not in_line: break
+        print "Tag to search: " + tag_to_search
+        if re.search(tag_to_search, in_line):
+            found = True
+            while re.search('>', in_line) == None :
+                str_where_search = str_where_search + in_line + " "
+                in_line = in_file.readline()
+            break
+    print "str_where_search = " + str_where_search
+
+    in_file.close()
+
+    if found is False:
+        raise _error(tag_to_search + " not found in " + config_file)
+
+    # Search the parameter
+    if re.search(str_to_search, str_where_search):
+        print "TEST SUCCESSFUL"
+        return ret_val[0]
+    else:
+        print "TEST FAILED"
+        return ret_val[1]
+
+
+

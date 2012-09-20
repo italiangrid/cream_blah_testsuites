@@ -132,15 +132,12 @@ my_conf.checkIfParamIsNull('site-info.def', site_info)
 my_conf.checkIfParamIsNull('services_glite_creamce', services_glite_creamce)
 
 # BLAH configuration parameters names 
-blah_cream_concurrency_level = my_conf.getParam('blah_parameters', 'blah_cream_concurrency_level')
 blah_bupdater_loop_interval = my_conf.getParam('blah_parameters', 'blah_bupdater_loop_interval')
 blah_check_children_interval = my_conf.getParam('blah_parameters', 'blah_check_children_interval')
 blah_bupdater_use_bhist_for_killed = my_conf.getParam('blah_parameters', 'blah_bupdater_use_bhist_for_killed')
-print " blah_cream_concurrency_level = " + blah_cream_concurrency_level
 print " blah_bupdater_loop_interval = " + blah_bupdater_loop_interval
 print " blah_check_children_interval = " + blah_check_children_interval
 print " blah_bupdater_use_bhist_for_killed = " + blah_bupdater_use_bhist_for_killed
-my_conf.checkIfParamIsNull('blah_cream_concurrency_level', blah_cream_concurrency_level)
 my_conf.checkIfParamIsNull('blah_bupdater_loop_interval', blah_bupdater_loop_interval)
 my_conf.checkIfParamIsNull('blah_check_children_interval', blah_check_children_interval)
 my_conf.checkIfParamIsNull('blah_bupdater_use_bhist_for_killed', blah_bupdater_use_bhist_for_killed)
@@ -158,6 +155,21 @@ elif middleware_version.lower() == "emi2":
 cream_sandbox_path = my_conf.getParam('cream_parameters', 'cream_sandbox_path')
 print " cream_sandbox_path = " + cream_sandbox_path
 my_conf.checkIfParamIsNull('cream_sandbox_path', cream_sandbox_path)
+cream_concurrency_level_yaim_name =  my_conf.getParam('cream_parameters', 'cream_concurrency_level_yaim_name')
+print " cream_concurrency_level_yaim_name = " + cream_concurrency_level_yaim_name
+my_conf.checkIfParamIsNull('cream_concurrency_level_yaim_name', cream_concurrency_level_yaim_name)
+if middleware_version.lower() == "emi1":
+    print " middleware_version = %s" % middleware_version.lower()
+    cream_concurrency_level = my_conf.getParam('cream_parameters', 'cream_concurrency_level_EMI1')
+    my_conf.checkIfParamIsNull('cream_concurrency_level_EMI1', cream_concurrency_level)
+elif middleware_version.lower() == "emi2":
+    print " middleware_version = %s" % middleware_version.lower()
+    cream_concurrency_level = my_conf.getParam('cream_parameters', 'cream_concurrency_level_EMI2')
+    my_conf.checkIfParamIsNull('cream_concurrency_level_EMI2', cream_concurrency_level)
+else:
+    print " middleware_version = %s" % middleware_version.lower()
+    raise _error('Invalid middleware version provided. Should be either "EMI1" or "EMI2", but you entered:"' + middleware_version + '"')
+print " cream_concurrency_level = " + cream_concurrency_level
 
 # do not change this variable
 ce=ce_endpoint + "/" + cream_queue
