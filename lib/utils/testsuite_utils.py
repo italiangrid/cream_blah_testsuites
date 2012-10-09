@@ -83,7 +83,7 @@ class CommandMng():
         client.connect(ce_host, username=admin_name, key_filename=CommandMng.tester_home+"/.ssh/id_rsa")
  
         print "running '%s'" % command
-        ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command + '| echo $?')
+        ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command)
     
         exit_status = ssh_stdout.channel.recv_exit_status()
         print "Command %s on ce %s exit status: %s" % (command, ce_host, exit_status)
@@ -91,6 +91,7 @@ class CommandMng():
                 client.close()
                 raise cream_testsuite_exception.TestsuiteError("Error on command %s execution on %s" % (command, ce_host))
         out = ""
+        err = ""
         if ssh_stdout is not None:
             out = []
             for i in ssh_stdout.readlines():
@@ -106,6 +107,11 @@ class CommandMng():
             err =['']
             print "error  of " + command + " is empty"
 
+        print "output of " + command 
+        print out
+        print "error  of " + command
+        print err
+  
         return "".join(out), "".join(err)
 
     
