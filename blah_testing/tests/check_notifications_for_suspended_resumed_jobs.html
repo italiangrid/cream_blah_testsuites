@@ -56,11 +56,11 @@ td.name, th.name {
 <tr>
 <td class="name">Documentation</td>
 <td class="colspan4" colspan="4">Test that notifications are sent for a job which finishes normally.\nIt can be used with both old and new blparser, configuring the right way the testsuite.\n\nSubmit this JDL to a CREAM-CE using the glite-ce-job-submit command:\n\nglite-ce-job-submit -a -r &lt;CEId&gt; test1.jdl\n\ncat test1.jd:\n[\nexecutable="/bin/sleep";\narguments="200";\n]\n\nThen suspends the job with glite-ce-job-suspend.\n\nCheck the batch system and verify than the job is actually suspended. Then wait for 5 minutes and then resume the job using the glite-ce-job-resume command.\n\nAfter the job finishes (it must be needed to then wait for a couple of minutes), check the log file /var/log/cream/glite-xxxparser.log. For the relevant job there should be:\n\n<br>
-   * A notification with JobStatus=1 (this can be missing)\n<br>
-   * A notification with JobStatus=2 (this can be missing)\n<br>
-   * A notification with JobStatus=5 (this must be there)\n<br>
-   * A notification with JobStatus=2 (this can be missing)\n<br>
-   * A notification with JobStatus=4 (this must be there) \n\nNote that with PBS and SGE it is possible to suspend only IDLE (i.e. not yet running) jobs. </td>
+* A notification with JobStatus=1 (this can be missing)\n<br>
+* A notification with JobStatus=2 (this can be missing)\n<br>
+* A notification with JobStatus=5 (this must be there)\n<br>
+* A notification with JobStatus=2 (this can be missing)\n<br>
+* A notification with JobStatus=4 (this must be there) \n\nNote that with PBS and SGE it is possible to suspend only IDLE (i.e. not yet running) jobs.</td>
 </tr>
 <tr>
 <td class="name">Metadata</td>
@@ -81,13 +81,6 @@ td.name, th.name {
 <td>CREAM configuration file cream-config.xml</td>
 <td>${cream_config_xml}</td>
 <td># CREAM configuration file cream-config.xml</td>
-<td></td>
-</tr>
-<tr>
-<td class="name">Metadata</td>
-<td>BLAH configuration parameter cream_concurrency_level</td>
-<td>${blah_cream_concurrency_level}</td>
-<td># BLAH configuration parameter cream_concurrency_level</td>
 <td></td>
 </tr>
 <tr>
