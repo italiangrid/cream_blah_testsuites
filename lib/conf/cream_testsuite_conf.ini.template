@@ -59,7 +59,7 @@ CATALINA_HOME=/var/lib/tomcat5
 GLITE_CREAM_LOCATION_VAR=/var
 ;
 [cream-ce_conf_files]
-;cream-config.xml = /etc/glite-ce-cream/cream-config.xml
+cream-config.xml = /etc/glite-ce-cream/cream-config.xml
 ; EMI2:
 ce-cream.xml_EMI2 = /etc/glite-ce-cream/cream-config.xml
 ; EMI1:
