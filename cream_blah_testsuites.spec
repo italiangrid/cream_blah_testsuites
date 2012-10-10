@@ -13,6 +13,7 @@ This is the python testing module and the test suite to use
 along robot framework,in order to execute a regression test
 suite for CREAM and BLAH.
 Documentation is also provided with this package.
+%define _unpackaged_files_terminate_build 0
 %prep
 %setup -q
 %build
