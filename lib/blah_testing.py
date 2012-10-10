@@ -20,7 +20,6 @@ import testsuite_exception
 import testsuite_utils
 import cream_testing
 import regression_vars
-import submission_thread
 
 import re
 
