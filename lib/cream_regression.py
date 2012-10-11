@@ -167,6 +167,10 @@ def get_job_output(target_dir_path, job_id):
        | Exception:   |
     '''
 
+    regex = re.compile('/$')
+    if re.search(regex,target_dir_path):
+        target_dir_path = target_dir_path[:-1]
+
     com="/usr/bin/glite-ce-job-output -D %s %s" % (target_dir_path, job_id)
     ret=exec_cream_cli_command(com)
     out = "".join(ret)
@@ -881,6 +885,10 @@ def check_ce_GlueForeignKey_GlueCEUniqueID(ce_host):
         error=fPtrErr1.readlines()
         error=" ".join(error)
 
+        print "Output of " + com
+        print output
+        print "Error of " + com
+        print error
         if len(error) != 0:
                 raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
 
