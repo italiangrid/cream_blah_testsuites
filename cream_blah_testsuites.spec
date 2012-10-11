@@ -38,6 +38,7 @@ install -m 0755 lib/blah_testing.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/li
 install -m 0755 lib/cream_regression.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/cream_regression.py
 install -m 0755 lib/cream_config_layout_mng.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/cream_config_layout_mng.py
 install -m 0755 lib/batch_sys_mng.py  $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/batch_sys_mng.py
+install -m 0755 lib/submission_thread.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/submission_thread.py
 install -m 0755 lib/conf/cream_testsuite_conf.ini.template $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/conf/cream_testsuite_conf.ini.template
 install -m 0755 lib/conf/cream_testsuite_conf.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/conf/cream_testsuite_conf.py
 install -m 0755 lib/conf/regression_vars.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/conf/regression_vars.py
@@ -87,6 +88,7 @@ echo "Package cream_blah_testsuites installed succesfully!"
 /opt/cream_blah_testsuites/lib/cream_regression.py
 /opt/cream_blah_testsuites/lib/cream_config_layout_mng.py
 /opt/cream_blah_testsuites/lib/batch_sys_mng.py
+/opt/cream_blah_testsuites/lib/submission_thread.py
 /opt/cream_blah_testsuites/lib/utils/cream_testsuite_exception.py
 /opt/cream_blah_testsuites/lib/utils/testsuite_exception.py
 /opt/cream_blah_testsuites/lib/utils/testsuite_utils.py
