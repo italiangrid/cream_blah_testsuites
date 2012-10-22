@@ -58,6 +58,13 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #86238 blahpd doesn't check the status of its daemons when idling\n\nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_86238_blahpd_doesn_t_check_t\n\nTo test the fix configure a CREAM CE with the new blparser.\n\nDon't use it (i.e. do not submit jobs nor issue any other commands).\n\nkill the budater and bnotifier processes.\n\nWait for 1 minute: you should see that the bupdater and bnotifier have been restarted. \n\nNote:\n-The bug is fixed introducing the parameter blah_check_children_interval in /etc/blah.config, so a preliminary check on this parameter has been added on the test. Without this control the bug could appear fixed also before than v1.18.0, because a restart mechanism already exists.\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?86238\n\nRelevant CREAM task where released (task #23312: BLAH v. 1.18.0):\nhttps://savannah.cern.ch/task/?23312\n</td>
 </tr>
 <tr>
+<td class="name">Default Tags</td>
+<td>new_parser</td>
+<td>blah_1.18.0</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Metadata</td>
 <td>Temporary Files Location</td>
 <td>${tmp_dir}</td>
