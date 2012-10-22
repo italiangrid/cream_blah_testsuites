@@ -58,6 +58,13 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #94414: BLParserLSF could crash if a suspend on an idle job is done.\n\nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_94414_BLParserLSF_could_cras\n\nTry to suspend a job whose status is "IDLE" and verify that the daemon BLParserLSF doesn't crash. \n\nNote: The functionality test check_notifications_for_suspended_resumed_jobs.html has been re-used. This test loads the batch system, send a job, wait it is IDLE and suspend it. Then the notifications in the blparser log are checked.\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?94414\n\nRelevant CREAM task where released (task #30328: BLAH v. 1.18.1):\nhttps://savannah.cern.ch/task/?30328\n</td>
 </tr>
 <tr>
+<td class="name">Default Tags</td>
+<td>old_parser</td>
+<td>blah_1.18.1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Metadata</td>
 <td>Temporary Files Location</td>
 <td>${tmp_dir}</td>
