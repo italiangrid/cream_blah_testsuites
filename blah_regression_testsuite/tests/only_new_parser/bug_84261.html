@@ -58,6 +58,13 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #84261 BNotifier on CREAM CE seems to not restart cleanly.\n\nTest Description:\nTo test the fix, configure a CREAM CE using the new blparser.\nThen try a:\n\nservice gLite restart\n\nIt shouldn't report the error message:\n\nStarting BNotifier: /opt/glite/bin/BNotifier: Error creating and binding socket: Address already in use\n\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?84261\n\nRelevant CREAM task where released (task #23312: BLAH v. 1.18.0):\nhttps://savannah.cern.ch/task/?23312\n\n</td>
 </tr>
 <tr>
+<td class="name">Default Tags</td>
+<td>new_parser</td>
+<td>blah_1.18.0</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Metadata</td>
 <td>Temporary Files Location</td>
 <td>${tmp_dir}</td>
