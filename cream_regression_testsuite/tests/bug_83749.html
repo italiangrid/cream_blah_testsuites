@@ -58,6 +58,13 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #83749 yaim-cream-ce should manage the attribute bupdater_loop_interval.\n\nTest Description:\nhttp://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_83749_yaim_cream_ce_should_m\n\nTo test the fix, check in the CREAM CE if the file /etc/blah.config contains the parameter bupdater_loop_interval.\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?83749\n\nRelevant CREAM task where released (task #21059: CREAM v. 1.14):\nhttps://savannah.cern.ch/task/?21059\n</td>
 </tr>
 <tr>
+<td class="name">Suite Setup</td>
+<td>Setup</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Suite Teardown</td>
 <td>Suite Teardown</td>
 <td># Restore the ce configuration</td>
@@ -173,32 +180,6 @@ td.name, th.name {
 <th class="name" colspan="5">Test Case</th>
 </tr>
 <tr>
-<td class="name"><a name="test_Set Log Level">Set Log Level</a></td>
-<td>[Documentation]</td>
-<td class="colspan3" colspan="3">Set the log level used for the test suite. This changes the verbosity of the final test suite log files.</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>[Tags]</td>
-<td>loglevel</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Set Log Level</td>
-<td>${log_level}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name"><a name="test_bug_83749">bug_83749</a></td>
 <td>Create Proxy</td>
 <td>${proxy_pass}</td>
@@ -249,13 +230,6 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Exec Remote Command</td>
-<td>service tomcat5 stop</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>${local_copy_of_services}=</td>
 <td>Get File From CE</td>
 <td>${services_glite_creamce}</td>
@@ -263,15 +237,22 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Set Suite Variable</td>
-<td>${local_saved_copy}</td>
-<td>${local_copy_of_services}_save</td>
+<td>Exec Local Command</td>
+<td>cp ${local_copy_of_services} ${local_copy_of_services}.glite-creamce </td>
+<td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Exec Local Command</td>
-<td>/bin/cp ${local_copy_of_services} ${local_saved_copy}</td>
+<td>Set Suite Variable</td>
+<td>${local_saved_copy}</td>
+<td>${local_copy_of_services}.glite-creamce</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Exec Remote Command</td>
+<td>service ${tomcat_service} stop</td>
 <td></td>
 <td></td>
 </tr>
@@ -347,7 +328,7 @@ td.name, th.name {
 <td class="name"><a name="keyword_Test Teardown">Test Teardown</a></td>
 <td>Run Keyword If Test Failed</td>
 <td>Exec Remote Command</td>
-<td>service tomcat5 restart</td>
+<td>service tomcat6 restart</td>
 <td></td>
 </tr>
 <tr>
@@ -368,6 +349,20 @@ td.name, th.name {
 <td class="name"></td>
 <td>Configure CE by Yaim</td>
 <td>${site_info}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Setup">Setup</a></td>
+<td>Set Log Level</td>
+<td>${log_level}</td>
 <td></td>
 <td></td>
 </tr>

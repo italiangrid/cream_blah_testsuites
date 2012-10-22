@@ -15,6 +15,7 @@
 
 import cream_testsuite_conf
 import cream_testing
+import os
 
 my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
 
@@ -100,6 +101,14 @@ my_conf.checkIfParamIsNull('tmp_dir', tmp_dir)
 delete_files = my_conf.getParam('testsuite_behaviour', 'delete_files')
 print " delete_files = " + delete_files
 my_conf.checkIfParamIsNull('delete_files', delete_files)
+
+# Service configuration
+tomcat_service = my_conf.getParam('srv_environment', 'tomcat_service')
+print " tomcat_service = " + tomcat_service
+my_conf.checkIfParamIsNull('tomcat_service', tomcat_service)
+catalina_home = my_conf.getParam('srv_environment','CATALINA_HOME')
+print " catalina_home = " + catalina_home
+my_conf.checkIfParamIsNull('catalina_home', catalina_home)
 
 # CREAM CE configuration files
 if middleware_version.lower() == "emi1":

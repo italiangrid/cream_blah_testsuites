@@ -600,7 +600,7 @@ def exec_jobDBAdminPurger_sh(db_usr_name, db_usr_pass, conf_f, options):
         | Exception:   |                                                                          |
     '''
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
-    catalina_home = my_conf.getParam('srv_environment','CATALINA_HOME')
+    catalina_home = regression_vars.catalina_home 
     middleware_version = my_conf.getParam('middleware', 'middleware_version')
     com = ""
     if middleware_version.lower() == "emi1":
@@ -633,7 +633,7 @@ def job_db_admin_purger_script_check(db_user_name, db_user_password, conf_f):
 
         # Gets the cream configuration file and stores it locally
         # Gets cream database username and password from ce-cream.xml configuration file 
-        # Runs the command "export CATALINA_HOME=/var/lib/tomcat5 ; JobDBAdminPurger.sh -c /etc/glite-ce-cream/cream-config.xml -u cremino -p creamtest -s DONE-FAILED,0"
+        # Runs the command "export CATALINA_HOME=" + catalina_home + " ; JobDBAdminPurger.sh -c /etc/glite-ce-cream/cream-config.xml -u cremino -p creamtest -s DONE-FAILED,0"
         # Parse the output
 
         ret_val = ['SUCCESS', 'FAILED']
