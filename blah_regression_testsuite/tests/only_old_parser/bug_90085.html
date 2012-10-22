@@ -58,6 +58,13 @@ td.name, th.name {
 <td class="colspan4" colspan="4">Regression test of bug #90985 Suspend command doesn't work with old parser \nTest Description:\nhttps://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_90085_Suspend_command_doesn\n\nTo test the fix configure a CREAM CE with the old blparser.\n\nThen submit a job and after a while suspend it using the glite-ce-job-suspend command.\n\nCheck the job status which eventually should be HELD. \n\nNote:\nWith PBS and SGE it is possible to suspend only IDLE (i.e. not yet running) jobs. To perform the test, first saturate the batch system, second submit the job which will be under test. At the end of the test cancel all submitted jobs to free the batch system\n\nSavanah bug reference:\nhttps://savannah.cern.ch/bugs/?90085\n\nRelevant CREAM task where released (task #23312: BLAH v. 1.18.0):\nhttps://savannah.cern.ch/task/?23312\n</td>
 </tr>
 <tr>
+<td class="name">Default Tags</td>
+<td>old_parser</td>
+<td>blah_1.18.0</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Metadata</td>
 <td>Temporary Files Location</td>
 <td>${tmp_dir}</td>
