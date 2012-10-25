@@ -13,7 +13,7 @@ cd ${CREAM_TESTSUITE_HOME}
 # Create blah functionality tests documentation
 python -m robot.testdoc blah_testing/tests/check_notifications_for_normally_finished_jobs.html blah_testing/doc/check_notifications_for_normally_finished_jobs.doc.html
 python -m robot.testdoc blah_testing/tests/check_notifications_for_cancelled_jobs.html blah_testing/doc/check_notifications_for_cancelled_jobs.doc.html
-python -m robot.testdoc blah_testing/tests/check_notifications_for_suspended_and_resumed_jobs.html blah_testing/doc/check_notifications_for_suspended_and_resumed_jobs.doc.html
+python -m robot.testdoc blah_testing/tests/check_notifications_for_suspended_resumed_jobs.html blah_testing/doc/check_notifications_for_suspended_resumed_jobs.doc.html
 
 ls -l blah_testing/doc
 
@@ -21,16 +21,12 @@ ls -l blah_testing/doc
 for i in `ls  blah_regression_testsuite/tests/only_new_parser/bug_*.html`; do
     src_file_name=`basename $i`
     dest_file_name=`basename $i .html`
-    echo "file sorgente : " $src_file_name
-    echo "file destinazione : " $dest_file_name
     python -m robot.testdoc blah_regression_testsuite/tests/only_new_parser/${src_file_name} blah_regression_testsuite/doc/${dest_file_name}.doc.html
 done
 
 for i in `ls blah_regression_testsuite/tests/only_old_parser/bug_*.html`; do
     src_file_name=`basename $i`
     dest_file_name=`basename $i .html`
-    echo "file sorgente : " $src_file_name
-    echo "file destinazione : " $dest_file_name
     python -m robot.testdoc blah_regression_testsuite/tests/only_old_parser/${src_file_name} blah_regression_testsuite/doc/${dest_file_name}.doc.html
 done
 
@@ -40,19 +36,16 @@ ls -l blah_regression_testsuite/doc
 for i in `ls  cream_regression_testsuite/tests/bug_*.html`; do
     src_file_name=`basename $i`
     dest_file_name=`basename $i .html`
-    echo "file sorgente : " $src_file_name
-    echo "file destinazione : " $dest_file_name
     python -m robot.testdoc cream_regression_testsuite/tests/${src_file_name} cream_regression_testsuite/doc/${dest_file_name}.doc.html
 done
 
 # Create library (lib) modules documentation
-cd  ${CREAM_TESTSUITE_HOME}/cream_regression_testsuite/doc
-/usr/lib64/python2.6/pydoc.py -w cream_regression.py.html /opt/cream_blah_testsuites/lib/cream_regression.py
-cd  ${CREAM_TESTSUITE_HOME}/blah_regression_testsuite/doc
-/usr/lib64/python2.6/pydoc.py -w cream_testsuite_exception.html /opt/cream_blah_testsuites/lib/utils/cream_testsuite_exception.py
-cd  ${CREAM_TESTSUITE_HOME}/blah_testing/doc
-/usr/lib64/python2.6/pydoc.py -w blah_testing.py.html /opt/cream_blah_testsuites/lib/blah_testing.py
-cd ${CREAM_TESTSUITE_HOME}/doc
+cd  ${CREAM_TESTSUITE_HOME}/doc
+/usr/lib64/python2.6/pydoc.py -w cream_regression.html ${CREAM_TESTSUITE_HOME}/lib/cream_regression.py
+/usr/lib64/python2.6/pydoc.py -w blah_testing.html ${CREAM_TESTSUITE_HOME}/lib/blah_testing.py
+/usr/lib64/python2.6/pydoc.py -w blah_regression.html ${CREAM_TESTSUITE_HOME}/lib/blah_regression.py
+/usr/lib64/python2.6/pydoc.py -w blah_regression.html ${CREAM_TESTSUITE_HOME}/lib/blah_regression.py
+/usr/lib64/python2.6/pydoc.py -w cream_testsuite_exception.html ${CREAM_TESTSUITE_HOME}/lib/utils/cream_testsuite_exception.py
 /usr/lib64/python2.6/pydoc.py -w batch_sys_mng.html  ${CREAM_TESTSUITE_HOME}/lib/batch_sys_mng.py 
 /usr/lib64/python2.6/pydoc.py -w cream_config_layout_mng.html ${CREAM_TESTSUITE_HOME}/lib/cream_config_layout_mng.py
 /usr/lib64/python2.6/pydoc.py -w submission_thread.html ${CREAM_TESTSUITE_HOME}/lib/submission_thread.py
