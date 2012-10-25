@@ -17,7 +17,10 @@ Implemented methods enumeration:
 1)  check_error_for_bug_84261
 2)  kill_remote_process_with_pid_file
 3)  remote_process_is_alive
-4)  monitor_ce_memory_while_submitting
+4)  get_remote_process_pid
+5)  get_remote_proc_RSS
+6)  monitor_ce_memory_while_submitting
+7)  check_for_bug_94414
 '''
 
 
@@ -29,8 +32,13 @@ class _error(Exception):
                 return str(self.string)
 
 def check_error_for_bug_84261(err_to_check):
-    '''
-
+    '''                                                                                                       
+       | Description: | check if input string contains the error "/usr/bin/BNotifier: Error creating and      | 
+       |              | binding"                                                                              |
+       | Arguments:   | jobs_statuses | dictionary of couples                                                 |
+       |              | cream_job_id:job_status                                                               |
+       | Returns:     | SUCCESS/FAILED                                                                        |
+       | Exceptions:  |                                                                                       |
     '''
 
     res = ""
@@ -47,7 +55,10 @@ def check_error_for_bug_84261(err_to_check):
 
 def kill_remote_process_with_pid_file(pid_file):
     '''
-
+       | Description: | 
+       | Arguments:   | 
+       | Returns:     | 
+       | Exceptions:  |
     '''
     proc_pid, error = cream_regression.get_remote_command_result("cat %s" % pid_file)
     command = "/bin/kill %s" % proc_pid
@@ -56,7 +67,10 @@ def kill_remote_process_with_pid_file(pid_file):
 
 def remote_process_is_alive(process_name):
     '''
-
+       | Description: | 
+       | Arguments:   | 
+       | Returns:     | 
+       | Exceptions:  |
     '''
     command = "/bin/ps -ef |grep %s |grep -v grep |awk \'{print $2}\'" % process_name
     my_utility = testsuite_utils.CommandMng()
@@ -73,7 +87,10 @@ def remote_process_is_alive(process_name):
   
 def get_remote_process_pid(process_name):
     '''
-
+       | Description: | 
+       | Arguments:   | 
+       | Returns:     | 
+       | Exceptions:  |
     '''
     command = "/bin/ps -ef |grep %s |grep -v grep |awk \'{print $2}\'" % process_name
     my_utility = testsuite_utils.CommandMng()
@@ -94,7 +111,10 @@ def get_remote_process_pid(process_name):
 
 def get_remote_proc_RSS(process_name):
     '''
-
+       | Description: | 
+       | Arguments:   | 
+       | Returns:     | 
+       | Exceptions:  |
     '''
     process_PID = get_remote_process_pid(process_name)
     process_rss = cream_regression.get_remote_command_result("/bin/ps -o rss " + process_PID)
