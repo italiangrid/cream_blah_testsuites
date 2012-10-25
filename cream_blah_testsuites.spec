@@ -22,14 +22,17 @@ install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/conf
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils
-#install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/docs
+install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/doc
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/tests
+install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/doc
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/tests
+install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/doc
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_testing
 install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_testing/tests
+install -m 0755 -d $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_testing/doc
 install -m 0755 testsuite_env.sh $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuite_env.sh
 install -m 0755 lib/blah_regression.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/blah_regression.py
 install -m 0755 lib/blah_testing.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/blah_testing.py
@@ -44,10 +47,12 @@ install -m 0755 lib/utils/cream_testsuite_exception.py $RPM_BUILD_ROOT/opt/cream
 install -m 0755 lib/utils/testsuite_exception.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils/testsuite_exception.py
 install -m 0755 lib/utils/testsuite_utils.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils/testsuite_utils.py
 install -m 0755 cream_regression_testsuite/tests/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/tests
-#install -m 0755 blah_regression_testsuite/tests/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/tests
+install -m 0755 cream_regression_testsuite/doc/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/doc
 install -m 0755 blah_regression_testsuite/tests/only_new_parser/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/tests
 install -m 0755 blah_regression_testsuite/tests/only_old_parser/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/tests
+install -m 0755 blah_regression_testsuite/doc/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/doc
 install -m 0755 blah_testing/tests/*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_testing/tests
+install -m 0755 blah_testing/doc/*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_testing/doc
 #install -m 0755 /opt/cream_blah_testsuites/docs/cream_test.7.gz
 #install -m 0755 /opt/cream_blah_testsuites/docs/cream_testing_keywords.html
 #install -m 0755 /opt/cream_blah_testsuites/docs/cream_testing_libdoc.html
@@ -92,8 +97,11 @@ echo "Package cream_blah_testsuites installed succesfully!"
 /opt/cream_blah_testsuites/lib/conf/cream_testsuite_conf.py
 /opt/cream_blah_testsuites/lib/conf/regression_vars.py
 /opt/cream_blah_testsuites/testsuites/cream_regression/tests/bug_*.html
-#/opt/cream_blah_testsuites/testsuites/blah_regression/tests/bug_*.html
+/opt/cream_blah_testsuites/testsuites/cream_regression/doc/bug_*.html
+/opt/cream_blah_testsuites/testsuites/blah_regression/tests/bug_*.html
+/opt/cream_blah_testsuites/testsuites/blah_regression/doc/bug_*.html
 /opt/cream_blah_testsuites/testsuites/blah_testing/tests/*.html
+/opt/cream_blah_testsuites/testsuites/blah_testing/doc/bug_*.html
 #/opt/cream_blah_testsuites/docs/cream_test.7.gz
 #/opt/cream_blah_testsuites/docs/cream_testing_keywords.html
 #/opt/cream_blah_testsuites/docs/cream_testing_libdoc.html
