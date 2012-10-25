@@ -1,0 +1,363 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module batch_sys_mng</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>batch_sys_mng</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/opt/cream_blah_testsuites/lib/batch_sys_mng.py">/opt/cream_blah_testsuites/lib/batch_sys_mng.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cream_testsuite_conf.html">cream_testsuite_conf</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="paramiko.html">paramiko</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="batch_sys_mng.html#LSFBatchSys">LSFBatchSys</a>
+</font></dt><dt><font face="helvetica, arial"><a href="batch_sys_mng.html#PBSBatchSys">PBSBatchSys</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="batch_sys_mng.html#BatchSystemFactory">BatchSystemFactory</a>
+</font></dt><dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="batch_sys_mng.html#BatchCmdError">BatchCmdError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="batch_sys_mng.html#JobNotFoundError">JobNotFoundError</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AbstractBatchSystem">class <strong>AbstractBatchSystem</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Abstract&nbsp;class&nbsp;to&nbsp;manage&nbsp;different&nbsp;batch&nbsp;systems<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AbstractBatchSystem-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AbstractBatchSystem-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AbstractBatchSystem-del_job_from_batch_id"><strong>del_job_from_batch_id</strong></a>(self, batch_id)</dt></dl>
+
+<dl><dt><a name="AbstractBatchSystem-get_batch_jid_from_cream_jid"><strong>get_batch_jid_from_cream_jid</strong></a>(self, cream_id)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BatchCmdError">class <strong>BatchCmdError</strong></a>(<a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;manage&nbsp;errors&nbsp;generated&nbsp;by&nbsp;batch&nbsp;system&nbsp;commands.<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;--&nbsp;input&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg&nbsp;&nbsp;--&nbsp;error&nbsp;message<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="batch_sys_mng.html#BatchCmdError">BatchCmdError</a></dd>
+<dd><a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BatchCmdError-__init__"><strong>__init__</strong></a>(self, msg)</dt></dl>
+
+<dl><dt><a name="BatchCmdError-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#BatchCmdError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="BatchCmdError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BatchCmdError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchCmdError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="BatchCmdError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BatchCmdError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BatchSysMngError">class <strong>BatchSysMngError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Abstract&nbsp;Class&nbsp;to&nbsp;manage&nbsp;exception&nbsp;of&nbsp;batch&nbsp;system&nbsp;management&nbsp;module.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="BatchSysMngError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#BatchSysMngError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="BatchSysMngError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BatchSysMngError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BatchSysMngError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#BatchSysMngError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="BatchSysMngError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BatchSystemFactory">class <strong>BatchSystemFactory</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BatchSystemFactory-__init__"><strong>__init__</strong></a>(self, batch_sys)</dt></dl>
+
+<dl><dt><a name="BatchSystemFactory-getBatchSystemMng"><strong>getBatchSystemMng</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="JobNotFoundError">class <strong>JobNotFoundError</strong></a>(<a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;manage&nbsp;errors&nbsp;generated&nbsp;by&nbsp;batch&nbsp;system&nbsp;commands.<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;--&nbsp;input&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg&nbsp;&nbsp;--&nbsp;error&nbsp;message<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="batch_sys_mng.html#JobNotFoundError">JobNotFoundError</a></dd>
+<dd><a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="JobNotFoundError-__init__"><strong>__init__</strong></a>(self, msg)</dt></dl>
+
+<dl><dt><a name="JobNotFoundError-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="batch_sys_mng.html#BatchSysMngError">BatchSysMngError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#JobNotFoundError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="JobNotFoundError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="JobNotFoundError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#JobNotFoundError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="JobNotFoundError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="JobNotFoundError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LSFBatchSys">class <strong>LSFBatchSys</strong></a>(<a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;manage&nbsp;LSF&nbsp;batch&nbsp;systems<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="batch_sys_mng.html#LSFBatchSys">LSFBatchSys</a></dd>
+<dd><a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LSFBatchSys-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LSFBatchSys-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LSFBatchSys-del_job_from_batch_id"><strong>del_job_from_batch_id</strong></a>(self, lsf_jid)</dt></dl>
+
+<dl><dt><a name="LSFBatchSys-del_job_from_cream_id"><strong>del_job_from_cream_id</strong></a>(self, cream_id)</dt></dl>
+
+<dl><dt><a name="LSFBatchSys-get_batch_jid_from_cream_jid"><strong>get_batch_jid_from_cream_jid</strong></a>(self, cream_id)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>ssh_connection</strong> = &lt;paramiko.SSHClient object&gt;</dl>
+
+<hr>
+Data descriptors inherited from <a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PBSBatchSys">class <strong>PBSBatchSys</strong></a>(<a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;manage&nbsp;PBS-Torque&nbsp;batch&nbsp;systems<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="batch_sys_mng.html#PBSBatchSys">PBSBatchSys</a></dd>
+<dd><a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PBSBatchSys-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="PBSBatchSys-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="PBSBatchSys-del_job_from_batch_id"><strong>del_job_from_batch_id</strong></a>(self, torque_jid)</dt></dl>
+
+<dl><dt><a name="PBSBatchSys-del_job_from_cream_id"><strong>del_job_from_cream_id</strong></a>(self, cream_id)</dt></dl>
+
+<dl><dt><a name="PBSBatchSys-get_batch_jid_from_cream_jid"><strong>get_batch_jid_from_cream_jid</strong></a>(self, cream_id)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>ssh_connection</strong> = &lt;paramiko.SSHClient object&gt;</dl>
+
+<hr>
+Data descriptors inherited from <a href="batch_sys_mng.html#AbstractBatchSystem">AbstractBatchSystem</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
