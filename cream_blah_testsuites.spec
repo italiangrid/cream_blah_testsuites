@@ -74,14 +74,17 @@ echo "Package cream_blah_testsuites installed succesfully!"
 %dir /opt/cream_blah_testsuites/lib
 %dir /opt/cream_blah_testsuites/lib/conf
 %dir /opt/cream_blah_testsuites/lib/utils
-#%dir /opt/cream_blah_testsuites/docs
+%dir /opt/cream_blah_testsuites/doc
 %dir /opt/cream_blah_testsuites/testsuites
 %dir /opt/cream_blah_testsuites/testsuites/cream_regression
 %dir /opt/cream_blah_testsuites/testsuites/cream_regression/tests
+%dir /opt/cream_blah_testsuites/testsuites/cream_regression/doc
 %dir /opt/cream_blah_testsuites/testsuites/blah_regression
 %dir /opt/cream_blah_testsuites/testsuites/blah_regression/tests
+%dir /opt/cream_blah_testsuites/testsuites/blah_regression/doc
 %dir /opt/cream_blah_testsuites/testsuites/blah_testing
 %dir /opt/cream_blah_testsuites/testsuites/blah_testing/tests
+%dir /opt/cream_blah_testsuites/testsuites/blah_testing/doc
 
 /opt/cream_blah_testsuites/testsuite_env.sh
 /opt/cream_blah_testsuites/lib/blah_regression.py
