@@ -104,7 +104,7 @@ echo "Package cream_blah_testsuites installed succesfully!"
 /opt/cream_blah_testsuites/testsuites/blah_regression/tests/bug_*.html
 /opt/cream_blah_testsuites/testsuites/blah_regression/doc/bug_*.html
 /opt/cream_blah_testsuites/testsuites/blah_testing/tests/*.html
-/opt/cream_blah_testsuites/testsuites/blah_testing/doc/bug_*.html
+/opt/cream_blah_testsuites/testsuites/blah_testing/doc/check_notifications_for_*.html
 #/opt/cream_blah_testsuites/docs/cream_test.7.gz
 #/opt/cream_blah_testsuites/docs/cream_testing_keywords.html
 #/opt/cream_blah_testsuites/docs/cream_testing_libdoc.html
