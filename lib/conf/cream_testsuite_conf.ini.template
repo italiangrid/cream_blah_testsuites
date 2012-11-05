@@ -57,7 +57,7 @@ robot_framework_log_level = TRACE
 [srv_environment]
 # SL5
 ;tomcat_service=tomcat5
-CATALINA_HOME=/var/lib/tomcat5
+;CATALINA_HOME=/var/lib/tomcat5
 # SL6
 tomcat_service=tomcat6
 CATALINA_HOME=/usr/share/tomcat6
