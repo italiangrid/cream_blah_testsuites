@@ -939,24 +939,25 @@ def check_ce_GlueForeignKey_GlueCEUniqueID(ce_host):
     p2 = subprocess.Popen(["grep", "-i", "foreignkey"], stdin=p1.stdout, stdout=subprocess.PIPE)
     p3 = subprocess.Popen(["grep", "-i", "glueceuniqueid"], stdin=p2.stdout, stdout=subprocess.PIPE)
 
-    p3.wait()
+    output, error = p3.communicate()
 
-    fPtr=p3.stdout
-    output=fPtr.readlines()
-    output=" ".join(output)
+    #fPtr=p3.stdout
+    #output=fPtr.readlines()
+    #output=" ".join(output)
 
-    fPtrErr1=p1.stderr
-    error=fPtrErr1.readlines()
-    error=" ".join(error)
+    #fPtrErr1=p1.stderr
+    #error=fPtrErr1.readlines()
+    #error=" ".join(error)
 
     print "Output of " + com
     print output
     print "Error of " + com
     print error
-    if len(error) != 0:
+
+    if error != None and len(error) != 0:
         raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
 
-    if len(output) == 0:
+    if output == None or len(output) == 0:
         raise _error("'" + com  + "'" + "Failed: output empty")
 
     exp = re.compile("GlueForeignKey: GlueCEUniqueID=" + ce_host)
@@ -984,22 +985,22 @@ def check_cream_dynamic_info(ce_host):
     p2 = subprocess.Popen(["grep", "-i", "GlueCEStateWaitingJobs"], stdin=p1.stdout, stdout=subprocess.PIPE)
     p3 = subprocess.Popen(["grep", "-i", "444444"], stdin=p2.stdout, stdout=subprocess.PIPE)
 
-    p3.wait()
+    output, error = p3.communicate()
 
-    fPtr3=p3.stdout
-    output=fPtr3.readlines()
-    output="".join(output)
+    #fPtr3=p3.stdout
+    #output=fPtr3.readlines()
+    #output="".join(output)
 
-    fPtrErr1=p1.stderr
-    error=fPtrErr1.readlines()
-    error=" ".join(error)
+    #fPtrErr1=p1.stderr
+    #error=fPtrErr1.readlines()
+    #error=" ".join(error)
 
-    if len(error) != 0:
-        raise _error(com + "\ncommand failed. \nCommand reported: " +  error)
+    if error != None and len(error) != 0:
+            raise _error(com + "\ncommand failed. \nCommand reported: " +  error)
 
-    if len(output) == 0:
-        print "4444444  NOT FOUND in `" + com + "`"
-        print "Bug Fixed"
+    if output == None or len(output) == 0:
+            print "4444444  NOT FOUND in `" + com + "`"
+            print "Bug Fixed"
     else:
         raise _error("444444 FOUND in `" + com + "`\nBug not fixed")
 
@@ -1023,6 +1024,7 @@ def check_bug_83338(use_cemon_val):
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b \"o=glue\" | grep -i endpointtype"
 
     p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p1.wait()
     p2 = subprocess.Popen(["grep", "-i", "endpointtype"], stdin=p1.stdout, stdout=subprocess.PIPE)
 
     p2.wait()
@@ -1178,6 +1180,7 @@ def check_bug_59871():
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b mds-vo-name=resource,o=grid | grep -i GlueHostApplicationSoftwareRunTimeEnvironment"
 
     p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "mds-vo-name=resource,o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p1.wait()
     p2 = subprocess.Popen(["grep", "-i", "GlueHostApplicationSoftwareRunTimeEnvironment"], stdin=p1.stdout, stdout=subprocess.PIPE)
 
     p2.wait()
