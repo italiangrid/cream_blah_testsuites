@@ -46,6 +46,7 @@ install -m 0755 lib/conf/regression_vars.py $RPM_BUILD_ROOT/opt/cream_blah_tests
 install -m 0755 lib/utils/cream_testsuite_exception.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils/cream_testsuite_exception.py
 install -m 0755 lib/utils/testsuite_exception.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils/testsuite_exception.py
 install -m 0755 lib/utils/testsuite_utils.py $RPM_BUILD_ROOT/opt/cream_blah_testsuites/lib/utils/testsuite_utils.py
+install -m 0755 doc/*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/doc
 install -m 0755 cream_regression_testsuite/tests/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/tests
 install -m 0755 cream_regression_testsuite/doc/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/cream_regression/doc
 install -m 0755 blah_regression_testsuite/tests/only_new_parser/bug_*.html $RPM_BUILD_ROOT/opt/cream_blah_testsuites/testsuites/blah_regression/tests
@@ -99,6 +100,7 @@ echo "Package cream_blah_testsuites installed succesfully!"
 /opt/cream_blah_testsuites/lib/conf/cream_testsuite_conf.ini.template
 /opt/cream_blah_testsuites/lib/conf/cream_testsuite_conf.py
 /opt/cream_blah_testsuites/lib/conf/regression_vars.py
+/opt/cream_blah_testsuites/doc/*.html
 /opt/cream_blah_testsuites/testsuites/cream_regression/tests/bug_*.html
 /opt/cream_blah_testsuites/testsuites/cream_regression/doc/bug_*.html
 /opt/cream_blah_testsuites/testsuites/blah_regression/tests/bug_*.html
