@@ -1,4 +1,4 @@
-import sys, os, subprocess, shlex, re, shutil 
+import sys, os, subprocess, shlex, re, shutil, datetime 
 import logging
 import paramiko
 import cream_testsuite_exception
@@ -17,6 +17,7 @@ class CommandMng():
         CommandMng.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
         CommandMng.my_ce_host = CommandMng.my_conf.getParam('submission_info','ce_host')
         CommandMng.my_admin_name = CommandMng.my_conf.getParam('ce_specific','cream_root_usr')
+        CommandMng.my_my_tmpDir = CommandMng.my_conf.getParam('testsuite_behaviour','tmp_dir')
 
         if len(CommandMng.my_ce_host) == 0:
             raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration")
@@ -26,10 +27,10 @@ class CommandMng():
     def exec_command(self, command):
 
             '''
-                 |  Description:    | Executes a generic shell command.          |
-                 |  Arguments:      | command, a generic shell command.          |
-                 |  Returns:        | command output and error as strings.       |
-                 |  Exceptions:     | throws an exception if something goes bad. |
+                 |  Description:    | Executes a generic shell command opening a subprocess.    |
+                 |  Arguments:      | command, a generic shell command.                         |
+                 |  Returns:        | command output and error as strings.                      |
+                 |  Exceptions:     | throws an exception if something goes bad.                |
             '''
           
             self.my_log.info("Executing command : " + command)
@@ -61,6 +62,43 @@ class CommandMng():
                         raise cream_testsuite_exception.TestsuiteError("Command %s execution failed with return value: %s\nCommand reported: %s" % (command, str(p.returncode), ','.join(my_output)))
 
             return my_output, my_error
+
+
+    def exec_command_os(self, command):
+            '''
+                 |  Description:    | Executes a generic shell command through os module.       |
+                 |                  | Redirect the command output in a file, read it and return |
+                 |                  | it as a string                                            |
+                 |  Arguments:      | command, a generic shell command.                         |
+                 |  Returns:        | command output and return code.                                           |
+                 |  Exceptions:     | throws an exception if something goes bad.                |
+            '''
+            now = datetime.datetime.now()
+            suffix = now.strftime("%Y%m%d_%M%S")
+            output_file = CommandMng.my_my_tmpDir + "/cmd_out_" + suffix + ".txt" 
+            print "output_file = " + output_file
+            try:
+                os.system("touch " + output_file)
+            except Exception,e:
+                print "Caught an exception trying to suspend job " + item
+                print e
+
+            ret = os.system(command + " > " + output_file)
+            print "Command " + command + " return code = " + str(ret)
+            if ret == 0:
+                    print " Command " + command + " successfully excuted"
+                    myfile = open(output_file, "r")
+                    output = myfile.read()
+                    myfile.close()
+
+                    print "exec_command_os " + command + " output"
+                    print output
+
+                    return output, ret
+
+            else:
+                    print " Command " + command + " execution returned error code: " + str(ret)
+                    return "", ret
 
 
     def exec_remote_command(self, command):

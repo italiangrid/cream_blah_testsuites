@@ -83,7 +83,7 @@ Implemente methods enumeration:
 
 '''
 
-import subprocess , shlex , os , sys , time , datetime , re , string , paramiko
+import subprocess , shlex , os , sys , time , datetime, re , string , paramiko
 from string import Template
 import batch_sys_mng, cream_testing, testsuite_utils, cream_config_layout_mng, cream_testsuite_conf
 import regression_vars
@@ -932,42 +932,42 @@ def check_ce_GlueForeignKey_GlueCEUniqueID(ce_host):
         | Returns:     | Nothing (raises exception uppon non-validation)                            |
         | Exceptions:  |                                                                            |
     '''
+ 
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
 
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i foreignkey | grep -i glueceuniqueid"
+   
+    my_utility = testsuite_utils.CommandMng()
 
-    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p2 = subprocess.Popen(["grep", "-i", "foreignkey"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    p3 = subprocess.Popen(["grep", "-i", "glueceuniqueid"], stdin=p2.stdout, stdout=subprocess.PIPE)
+    output, ret_code = my_utility.exec_command_os(com)
 
-    output, error = p3.communicate()
+    if ret_code == 0:
 
-    #fPtr=p3.stdout
-    #output=fPtr.readlines()
-    #output=" ".join(output)
+        if len(output) == 0:
+            print "Match for \"GlueForeignKey: GlueCEUniqueID=" + ce_host + "\" not found in \"\n" + "`" + com + "`" + "\nBug not fixed."
+            return ret_val[1]
+            
+        else:
+            exp = re.compile("GlueForeignKey: GlueCEUniqueID=" + ce_host)
+            res = exp.match(output)
+            if res:
+                print 'Match found: ', res.group()
+                return ret_val[0]
+            else:
+                print 'No match found'
+                print "Match for \"GlueForeignKey: GlueCEUniqueID=" + ce_host + "\" not found in \"\n" + "`" + com + "`" + "\nBug not fixed."
+                return ret_val[1]
 
-    #fPtrErr1=p1.stderr
-    #error=fPtrErr1.readlines()
-    #error=" ".join(error)
+    elif ret_code == 1:
+        print "Match for \"GlueForeignKey: GlueCEUniqueID=" + ce_host + "\" not found in \"\n" + "`" + com + "`" + "\nBug not fixed."
+        return ret_val[1]
 
-    print "Output of " + com
-    print output
-    print "Error of " + com
-    print error
+    else: 
+        print "Error executing command " + com
+        print "error code = " + str(ret_code)
+        return ret_val[1]
 
-    if error != None and len(error) != 0:
-        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
 
-    if output == None or len(output) == 0:
-        raise _error("'" + com  + "'" + "Failed: output empty")
-
-    exp = re.compile("GlueForeignKey: GlueCEUniqueID=" + ce_host)
-    res = exp.match(output)
-    if res:
-        print 'Match found: ', res.group()
-    else:
-        print 'No match found'
-        raise _error("Match for \"GlueForeignKey: GlueCEUniqueID=" + ce_host + "\" not found in \"\n" + "`" + com + "`" + "\nBug not fixed.")
-     
 #############################################################################################################################
 ##############################################################################################################################
 def check_cream_dynamic_info(ce_host):
@@ -980,29 +980,31 @@ def check_cream_dynamic_info(ce_host):
   
     '''
 
-    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs | grep -i 444444"
-    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p2 = subprocess.Popen(["grep", "-i", "GlueCEStateWaitingJobs"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    p3 = subprocess.Popen(["grep", "-i", "444444"], stdin=p2.stdout, stdout=subprocess.PIPE)
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
 
-    output, error = p3.communicate()
+    #com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs | grep -i 444444"
+    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs "
 
-    #fPtr3=p3.stdout
-    #output=fPtr3.readlines()
-    #output="".join(output)
+    my_utility = testsuite_utils.CommandMng()
 
-    #fPtrErr1=p1.stderr
-    #error=fPtrErr1.readlines()
-    #error=" ".join(error)
+    output, ret_code = my_utility.exec_command_os(com)
 
-    if error != None and len(error) != 0:
-            raise _error(com + "\ncommand failed. \nCommand reported: " +  error)
+    if ret_code == 0:
 
-    if output == None or len(output) == 0:
-            print "4444444  NOT FOUND in `" + com + "`"
-            print "Bug Fixed"
-    else:
-        raise _error("444444 FOUND in `" + com + "`\nBug not fixed")
+        if len(output) == 0:
+            print "Match for GlueCEStateWaitingJobs not found in ldapsearch. Something goes wrong"
+            return ret_val[1]
+
+        else:
+            exp = re.compile("444444")
+            res = exp.match(output)
+            if res:
+                print 'Match FOUND: ', res.group()
+                return ret_val[1]
+            else:
+                print "444444 NOT FOUND in " + com + " output"
+                return ret_val[0]
+
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -1026,6 +1028,7 @@ def check_bug_83338(use_cemon_val):
     p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p1.wait()
     p2 = subprocess.Popen(["grep", "-i", "endpointtype"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    p1.stdout.close()
 
     p2.wait()
 
@@ -1182,6 +1185,7 @@ def check_bug_59871():
     p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "mds-vo-name=resource,o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p1.wait()
     p2 = subprocess.Popen(["grep", "-i", "GlueHostApplicationSoftwareRunTimeEnvironment"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    p1.stdout.close()
 
     p2.wait()
 
