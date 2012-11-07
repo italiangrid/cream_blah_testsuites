@@ -1,6 +1,6 @@
 Summary: Regression test library and regression test suite for cream and blah
 Name: cream_blah_testsuites
-Version: 0.0
+Version: 0.1
 Release: 0
 Source0: cream_blah_testsuites.tar.gz
 License: GPLv3
