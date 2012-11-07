@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>testsuite_utils</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/opt/cream_blah_testsuites/lib/utils/testsuite_utils.py">/opt/cream_blah_testsuites/lib/utils/testsuite_utils.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bertocco/dev/cream_blah_testsuites/lib/utils/testsuite_utils.py">/home/bertocco/dev/cream_blah_testsuites/lib/utils/testsuite_utils.py</a></font></td></tr></table>
     <p></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -19,14 +19,15 @@
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cream_testsuite_conf.html">cream_testsuite_conf</a><br>
 <a href="cream_testsuite_exception.html">cream_testsuite_exception</a><br>
-<a href="logging.html">logging</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="os.html">os</a><br>
 <a href="paramiko.html">paramiko</a><br>
-<a href="re.html">re</a><br>
-</td><td width="25%" valign=top><a href="shlex.html">shlex</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="shlex.html">shlex</a><br>
 <a href="shutil.html">shutil</a><br>
-<a href="subprocess.html">subprocess</a><br>
-</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="subprocess.html">subprocess</a><br>
+<a href="sys.html">sys</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -48,10 +49,17 @@
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="CommandMng-__init__"><strong>__init__</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="CommandMng-exec_command"><strong>exec_command</strong></a>(self, command)</dt><dd><tt>|&nbsp;&nbsp;Description:&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Executes&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-|&nbsp;&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command,&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-|&nbsp;&nbsp;Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command&nbsp;output&nbsp;and&nbsp;error&nbsp;as&nbsp;strings.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-|&nbsp;&nbsp;Exceptions:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;throws&nbsp;an&nbsp;exception&nbsp;if&nbsp;something&nbsp;goes&nbsp;bad.&nbsp;|</tt></dd></dl>
+<dl><dt><a name="CommandMng-exec_command"><strong>exec_command</strong></a>(self, command)</dt><dd><tt>|&nbsp;&nbsp;Description:&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Executes&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command&nbsp;opening&nbsp;a&nbsp;subprocess.&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command,&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command&nbsp;output&nbsp;and&nbsp;error&nbsp;as&nbsp;strings.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Exceptions:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;throws&nbsp;an&nbsp;exception&nbsp;if&nbsp;something&nbsp;goes&nbsp;bad.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</tt></dd></dl>
+
+<dl><dt><a name="CommandMng-exec_command_os"><strong>exec_command_os</strong></a>(self, command)</dt><dd><tt>|&nbsp;&nbsp;Description:&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Executes&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command&nbsp;through&nbsp;os&nbsp;module.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Redirect&nbsp;the&nbsp;command&nbsp;output&nbsp;in&nbsp;a&nbsp;file,&nbsp;read&nbsp;it&nbsp;and&nbsp;return&nbsp;|<br>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;it&nbsp;as&nbsp;a&nbsp;string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command,&nbsp;a&nbsp;generic&nbsp;shell&nbsp;command.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command&nbsp;output&nbsp;and&nbsp;return&nbsp;code.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+|&nbsp;&nbsp;Exceptions:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;throws&nbsp;an&nbsp;exception&nbsp;if&nbsp;something&nbsp;goes&nbsp;bad.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</tt></dd></dl>
 
 <dl><dt><a name="CommandMng-exec_remote_command"><strong>exec_remote_command</strong></a>(self, command)</dt><dd><tt>|&nbsp;Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Executes&nbsp;a&nbsp;generic&nbsp;unix&nbsp;command&nbsp;on&nbsp;the&nbsp;cream&nbsp;ce&nbsp;under&nbsp;test&nbsp;|<br>
 |&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;command&nbsp;to&nbsp;execute&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
