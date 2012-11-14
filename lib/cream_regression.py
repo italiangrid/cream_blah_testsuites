@@ -1230,7 +1230,81 @@ def check_bug_59871():
 
     print "check_bug_59871 result = " + check_result
     return check_result
-   
+
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_96306():
+    '''
+       | Description: | Execute an ldapsearch vs. the ce resource,                                  |
+       |              | search GLUE2ApplicationEnvironmentID                                        |
+       |              | and verify that is present TESTTAG uppercased. Then search                  |
+       |              | GLUE2ApplicationEnvironmentAppName and verify that is present TESTTAG       |
+       |              | uppercased.                                                                 |
+       | Arguments:   | none                                                                        |  
+       | Returns:     | The result of the check                                                     |
+       | Exceptions:  |                                                                             | 
+    '''
+
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    ce_host = my_conf.getParam('submission_info','ce_host')
+
+    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=glue"
+
+    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p1.wait()
+
+    fPtr=p1.stdout
+    output=fPtr.readlines()
+    output=" ".join(output)
+
+    fPtrErr1=p1.stderr
+    error=fPtrErr1.readlines()
+    error=" ".join(error)
+
+    if error != None and len(error) != 0:
+        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
+
+    if output == None or len(output) == 0:
+        raise _error("'" + com  + "'" + "Failed: output empty")
+
+    print "Result of ldapsearch:"
+    print output
+
+    test_res = ret_val[1]
+
+    # First search
+    ex = re.compile("GLUE2ApplicationEnvironmentID: TESTTAG")
+    search_res = ex.search(output)
+
+    if search_res is None:
+        print "GLUE2ApplicationEnvironmentID: TESTTAG NOT found in output of " + com
+        test_res = ret_val[1]
+    else:
+        print "GLUE2ApplicationEnvironmentID: TESTTAG found in output of " + com
+        test_res = ret_val[0]
+
+        search_res = search_res.group()
+        print "case sensitive search of GLUE2ApplicationEnvironmentID: TESTTAG result = %s" % search_res
+
+    # Second search
+    ex = re.compile("GLUE2ApplicationEnvironmentAppName: TESTTAG")
+    search_res = ex.search(output)
+
+    if search_res is None:
+        print "GLUE2ApplicationEnvironmentAppName: TESTTAG NOT found in output of " + com
+        test_res = ret_val[1]
+    else:
+        print "GLUE2ApplicationEnvironmentAppName: TESTTAG found in output of " + com
+        test_res = ret_val[0]
+
+        search_res = search_res.group()
+        print "case sensitive search of GLUE2ApplicationEnvironmentAppName: TESTTAG result = %s" % search_res
+
+    return test_res
+
+
 #############################################################################################################################
 ##############################################################################################################################
 def check_bug_87361(config_file, cream_concurrency_level_val):
