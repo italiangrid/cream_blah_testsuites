@@ -85,8 +85,9 @@ Implemente methods enumeration:
 
 import subprocess , shlex , os , sys , time , datetime, re , string , paramiko
 from string import Template
-import batch_sys_mng, cream_testing, testsuite_utils, cream_config_layout_mng, cream_testsuite_conf
+import batch_sys_mng, cream_testing, testsuite_utils, cream_config_layout_mng, cream_testsuite_conf, mysql_mng
 import regression_vars
+import MySQLdb as mdb
 
 class _error(Exception):
 
@@ -1005,6 +1006,61 @@ def check_cream_dynamic_info(ce_host):
                 print "444444 NOT FOUND in " + com + " output"
                 return ret_val[0]
 
+#############################################################################################################################
+##############################################################################################################################
+def get_cream_db_access_params():
+    '''
+        | Description: | Search cream database name, host, username and password in cream       |
+        |              | configuration file defined in cream_testsuite_conf.ini.                |
+        | Arguments:   | None                                                                   |
+        | Returns:     | db_host, db_name, db_user, db_password                                 |
+        | Exceptions:  |                                                                        |
+    '''
+
+    cream_conf_layout_mng = cream_config_layout_mng.CreamConfigLayoutMng()
+
+    db_user, db_password = cream_conf_layout_mng.get_cream_db_user_password()
+    db_host = cream_conf_layout_mng.get_cream_db_host()
+    db_name = cream_conf_layout_mng.get_cream_db_name()
+
+    return db_host, db_name, db_user, db_password
+
+
+#############################################################################################################################
+#############################################################################################################################
+def get_creamdb_startUpTime_and_creationTime(db_host, db_name, db_user, db_password):
+    '''
+    '''
+
+    my_mysql_mng = mysql_mng.MysqlMng(db_name, db_user, db_password, db_host)
+    db_connection = my_mysql_mng.db_connect(db_host, db_user, db_password, db_name)
+    
+    col_list = []
+    col_list.append("startUpTime")
+    col_list.append("creationTime")
+    db_connection = my_mysql_mng.db_connect(db_host, db_user, db_password, db_name)
+    selected_rows = my_mysql_mng.exec_select("db_info", col_list, db_connection)
+    
+    print selected_rows
+
+    my_startUpTime = selected_rows[0][0]
+    my_creationTime = selected_rows[0][1]
+
+    return my_startUpTime, my_creationTime
+
+#############################################################################################################################
+##############################################################################################################################
+def check_cream_dynamic_info(ce_host):
+    '''
+        | Description: | Execute an ldapsearch on vs. the ce under test and verify if the result    |
+        |              | contains 'GlueCEStateWaitingJobs 444444'                                   |
+        | Arguments:   | string | ce host under test                                                |   
+        | Returns:     | Nothing (raises exception uppon non-validation)                            |
+        | Exceptions:  |                                                                            |
+    
+    '''
+
+    ret_val
 
 #############################################################################################################################
 ##############################################################################################################################

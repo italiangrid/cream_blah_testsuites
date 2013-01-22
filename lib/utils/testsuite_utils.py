@@ -1,7 +1,7 @@
 import sys, os, subprocess, shlex, re, shutil, datetime 
 import logging
 import paramiko
-import cream_testsuite_exception
+from cream_testsuite_exception import TestsuiteError
 import cream_testsuite_conf
 
 class CommandMng():
@@ -383,3 +383,34 @@ class Utils():
         self.put_file_on_ce(local_copy_of_file, remote_file_name)
 
         return local_copy_of_file, local_copy_of_file_saved
+
+
+    def open_local_copy_of_ce_file(self, remote_file_name, out_dir):
+        '''
+            | Description: | Get a local copy of remote_file_name,                          |
+            |              | returns reference to the local file opened                     |
+            | Arguments:   | remote_file_name | full path name                              |
+            | Returns:     | reference to local file opened                                 |
+            | Exceptions:  |                                                                |
+        '''
+
+        print "Remote file to be opened : " + remote_file_name
+        local_file = self.get_file_from_ce(remote_file_name, out_dir)
+        print "Local file to be opened : " + local_file
+        if len(local_file) == 0:
+            print "File " + local_file + " NOT FOUND on " + self.ce_host
+            raise cream_testsuite_exception.TestsuiteError("File " + local_file + " NOT FOUND on " + self.ce_host)
+
+        print "File name = " + local_file
+        self.my_log.debug("File name = " + local_file)
+        try:
+            in_file = open(local_file,"r")
+        except Exception as exc:
+            self.my_log.error("Error opening file " + local_file)
+            print "Error opening file " + local_file
+            self.my_log.error(exc)
+            raise cream_testsuite_exception.TestsuiteError("Error opening file " + local_file)
+
+        return in_file
+
+

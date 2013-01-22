@@ -58,7 +58,7 @@ class CreamConfigLayoutMng():
         print "Configuration file where search : " + config_file
         if len(config_file) == 0:
             print "File " + config_file + " NOT FOUND on " + self.ce_host
-            raise cream_testsuite_exception.CreamTestsuiteError("File " + config_file + " NOT FOUND on " + self.ce_host)
+            raise cream_testsuite_exception.TestsuiteError("File " + config_file + " NOT FOUND on " + self.ce_host)
 
         print "Configuration file name = " + config_file
         self.my_log.debug("Configuration file name = " + config_file)
@@ -68,7 +68,7 @@ class CreamConfigLayoutMng():
             self.my_log.error("Error opening file " + config_file)
             print "Error opening file " + config_file
             self.my_log.error(exc)
-            raise cream_testsuite_exception.CreamTestsuiteError("Error opening file " + config_file)
+            raise cream_testsuite_exception.TestsuiteError("Error opening file " + config_file)
 
         str_where_search = ""
         found = False
@@ -87,20 +87,119 @@ class CreamConfigLayoutMng():
       
         if found is False:
                 self.my_log.critical("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file)
-                raise cream_testsuite_exception.CreamTestsuiteError("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file)
+                raise cream_testsuite_exception.TestsuiteError("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file)
 
         m = re.search('(?<=username=\").*\" ', str_where_search)
         db_u_name = m.group(0)
         db_u_name = db_u_name.replace('\"','')
+        db_u_name = db_u_name.strip()
 
         m = re.search('(?<=password=\").*\"', str_where_search)
         db_u_pwd = m.group(0)
         db_u_pwd = db_u_pwd.replace('\"','')
+        db_u_pwd = db_u_pwd.strip()
 
-        self.my_log.debug("db_user_name = " + db_u_name + "; db_user_password = " + db_u_pwd)
+        self.my_log.debug("db_user_name = #" + db_u_name + "#; db_user_password = #" + db_u_pwd + "#")
+        print "db_user_name = #" + db_u_name + "#; db_user_password = #" + db_u_pwd + "#"
 
         return db_u_name, db_u_pwd
      
+    def get_cream_db_host(self):
+        '''
+              | Description:    | Search cream database host file defined in cream_testsuite_conf.ini.|
+              | Arguments:      | None.                                                               |
+              | Returns:        | db host                                                             |
+              | Exceptions:     |                                                                     |
+        '''
+
+        config_file_name = regression_vars.ce_cream_xml
+        in_file = self.my_utils.open_local_copy_of_ce_file(config_file_name, self.output_dir)
+
+        str_where_search = ""
+        found = False
+
+
+        while True :
+            in_line = in_file.readline()
+            if not in_line: break
+            if re.search('<Resource name=\"jdbc/creamdb\"', in_line) or re.search('<dataSource name=\"datasource_creamdb\"', in_line):
+                found = True
+                while re.search('/>', in_line) == None :
+                    str_where_search = str_where_search + in_line + " "
+                    in_line = in_file.readline()
+                break
+
+        in_file.close()
+
+        if found is False:
+            self.my_log.critical("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file_name)
+            raise cream_testsuite_exception.TestsuiteError("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file_name)
+
+        m = re.search('(?<=url=\"jdbc:mysql://).*:', str_where_search)
+        db_host = m.group(0)
+        db_host = db_host.replace('\"','')
+        db_host = db_host.replace(':','')
+
+        self.my_log.debug("db_host = " + db_host)
+
+        if re.search('localhost', db_host):
+            db_host = self.ce_host 
+
+        return db_host
+
+    def get_cream_db_name(self):
+        '''
+              | Description:    | Search cream database name in conf file defined in cream_testsuite_conf.ini.|
+              | Arguments:      | None.                                                                       |
+              | Returns:        | cream db name                                                               |
+              | Exceptions:     |                                                                             |
+        '''
+
+        config_file_name = regression_vars.ce_cream_xml
+        in_file = self.my_utils.open_local_copy_of_ce_file(config_file_name, self.output_dir)
+
+        str_where_search = ""
+        found = False
+
+
+        while True :
+            in_line = in_file.readline()
+            if not in_line: break
+            if re.search('<Resource name=\"jdbc/creamdb\"', in_line) or re.search('<dataSource name=\"datasource_creamdb\"', in_line):
+                found = True
+                while re.search('/>', in_line) == None :
+                    str_where_search = str_where_search + in_line + " "
+                    in_line = in_file.readline()
+                break
+
+        in_file.close()
+
+        if found is False:
+            self.my_log.critical("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file_name)
+            raise cream_testsuite_exception.TestsuiteError("<Resource name=\"jdbc/creamdb\" or <dataSource name=\"datasource_creamdb\" not found in " + config_file_name)
+
+        m = re.search('(?<=url=\"jdbc:mysql://).*\?', str_where_search)
+        sub_str_where_search = m.group(0)
+        m = re.search('(?<=/).*\?', sub_str_where_search)
+        db_name = m.group(0)
+        db_name = db_name.replace('?','')
+
+        return db_name.strip()
+
+    def get_cream_db_access_params(self):
+
+        ''' | Description: | Search cream database name, host, username and password in cream       |
+            |              | configuration file defined in cream_testsuite_conf.ini.                |
+            | Arguments:   | None                                                                   |
+            | Returns:     | db_host, db_name, db_user, db_password                                 |
+            | Exceptions:  |                                                                        |
+        ''' 
+
+        db_user, db_password = self.get_cream_db_user_password()
+        db_host = self.get_cream_db_host()
+        db_name = self.get_cream_db_name()
+
+        return db_host, db_name, db_user, db_password
 
     def check_yaim_param(self, param_name):
     
@@ -220,11 +319,11 @@ class CreamConfigLayoutMng():
                 fout1.close()
                 self.my_log.debug("Failed executing : `" + com1 + "`\n" + "".join(com1_out) + " Raise cream_configurator_exceptions.CreamConfiguratorError")
                 print "Failed executing : `" + com1 + "`\n" + "".join(com1_out) + " Raise cream_configurator_exceptions.CreamConfiguratorError"
-                raise cream_testsuite_exception.CreamTestsuiteError("Failed executing : `" + com1 + "`\n" + "".join(com1_out))
+                raise cream_testsuite_exception.TestsuiteError("Failed executing : `" + com1 + "`\n" + "".join(com1_out))
             else :
                 self.my_log.debug("Failed executing : `" + com1 + "` - Reason unknown. Raise cream_configurator_exceptions.CreamConfiguratorError.")
                 print "Failed executing : `" + com1 + "` - Reason unknown. Raise cream_configurator_exceptions.CreamConfiguratorError."
-                raise cream_testsuite_exception.CreamTestsuiteError("Failed executing : `" + com1 + "` - Reason unknown")
+                raise cream_testsuite_exception.TestsuiteError("Failed executing : `" + com1 + "` - Reason unknown")
 
         fout2 = open(temp_file, 'a')
         args = shlex.split(com2.encode('ascii'))
