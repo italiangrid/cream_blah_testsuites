@@ -1030,6 +1030,11 @@ def get_cream_db_access_params():
 #############################################################################################################################
 def get_creamdb_startUpTime_and_creationTime(db_host, db_name, db_user, db_password):
     '''
+        | Description: |  |
+        |              |  |
+        | Arguments:   |  |
+        | Returns:     |  |
+        | Exceptions:  |  |
     '''
 
     my_mysql_mng = mysql_mng.MysqlMng(db_name, db_user, db_password, db_host)
@@ -1081,59 +1086,46 @@ def check_bug_83338(use_cemon_val):
 
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b \"o=glue\" | grep -i endpointtype"
 
-    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p1.wait()
-    p2 = subprocess.Popen(["grep", "-i", "endpointtype"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    p1.stdout.close()
+    my_utility = testsuite_utils.CommandMng()
+    output, ret_code = my_utility.exec_command_os(com)
 
-    p2.wait()
+    if ret_code == 0:
 
-    fPtr2 = p2.stdout
-    output = fPtr2.readlines()
-    output="".join(output)
+        if len(output) == 0:
+            print "Match for endpointtype not found in ldapsearch. Something goes wrong"
+            raise _error("endpointtype NOT FOUND in `" + com + "`")
 
-    fPtrErr1 = p1.stderr 
-    error=fPtrErr1.readlines()
-    error = "".join(error)
-
-    if len(error) != 0:
-        raise _error(com + "\ncommand failed. \nCommand reported: " +  error)
-
-    if len(output) == 0:
-        print "endpointtype NOT FOUND in `" + com + "`"
-        raise _error("endpointtype NOT FOUND in `" + com + "`")
-    else:
-
-        ex = re.compile('(?<=endpointType=).', re.IGNORECASE)
-        endpoint_type = ex.search(output)
-
-        if endpoint_type is None:
-            raise _error("endpointType NOT found in output of %s" % com)
-
-        endpoint_type = endpoint_type.group()
-        print "endpoint_type = %s" % endpoint_type
-
-        if (use_cemon_val == "true"):
-            if endpoint_type == '3':
-                print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
-                return ret_val[0]
-            else:
-                print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
-                return ret_val[1]
         else:
-            if (use_cemon_val == "false"):
-                if endpoint_type == '2':
+            ex = re.compile('(?<=endpointType=).', re.IGNORECASE)
+            endpoint_type = ex.search(output)
+
+            if endpoint_type is None:
+                raise _error("endpointType NOT found in output of %s" % com)
+
+            endpoint_type = endpoint_type.group()
+            print "endpoint_type = %s" % endpoint_type
+    
+            if (use_cemon_val == "true"):
+                if endpoint_type == '3':
                     print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
                     return ret_val[0]
                 else:
                     print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
                     return ret_val[1]
             else:
-                raise _error("Unknown value use_cemon=%s" % use_cemon_val)
+                if (use_cemon_val == "false"):
+                    if endpoint_type == '2':
+                        print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
+                        return ret_val[0]
+                    else:
+                        print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
+                        return ret_val[1]
+                else:
+                    raise _error("Unknown value use_cemon=%s" % use_cemon_val)
 
-    print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+        print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
 
-    return ret_val[1]
+        return ret_val[1]
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -1428,5 +1420,26 @@ def check_bug_87361(config_file, cream_concurrency_level_val):
         print "TEST FAILED"
         return ret_val[1]
 
+#############################################################################################################################
+##############################################################################################################################
+def check_bug_99072():
+    '''
+        | Description: |  |
+        |              |  |
+        | Arguments:   |  |
+        | Returns:     |  |
+        | Exceptions:  |  |
+    '''
+
+    cmd_mng = testsuite_utils.CommandMng()
+    cmd = "/usr/bin/glite_cream_load_monitor /etc/glite-ce-cream-utils/glite_cream_load_monitor.conf --show"
+    out, err = cmd_mng.exec_remote_command(cmd)
+
+    m = re.search('(?<=Detected value for Tomcat FD:).*', out)
+    res = m.group(0).strip()
+    print "Sto per stampare il valore trovato (da confrontare):"
+    print res
+
+    return res
 
 
