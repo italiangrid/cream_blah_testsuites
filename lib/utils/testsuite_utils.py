@@ -1,7 +1,7 @@
 import sys, os, subprocess, shlex, re, shutil, datetime 
 import logging
 import paramiko
-from cream_testsuite_exception import TestsuiteError
+import testsuite_exception
 import cream_testsuite_conf
 
 class CommandMng():
@@ -20,9 +20,9 @@ class CommandMng():
         CommandMng.my_my_tmpDir = CommandMng.my_conf.getParam('testsuite_behaviour','tmp_dir')
 
         if len(CommandMng.my_ce_host) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration")
+            raise testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration")
         if len(CommandMng.my_admin_name) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
+            raise testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
 
     def exec_command(self, command):
 
@@ -59,7 +59,7 @@ class CommandMng():
 
             if retVal != 0 and len(my_output) != 0: 
                 if "error" in ','.join(my_output).lower() or "fatal" in ','.join(my_output).lower() or "fault" in ','.join(my_output).lower() or retVal != 0 :
-                        raise cream_testsuite_exception.TestsuiteError("Command %s execution failed with return value: %s\nCommand reported: %s" % (command, str(p.returncode), ','.join(my_output)))
+                        raise testsuite_exception.TestsuiteError("Command %s execution failed with return value: %s\nCommand reported: %s" % (command, str(p.returncode), ','.join(my_output)))
 
             return my_output, my_error
 
@@ -111,14 +111,16 @@ class CommandMng():
 
         ce_host = CommandMng.my_ce_host
         admin_name = CommandMng.my_admin_name
-
+        print "Check point A"
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #In case the server's key is unknown,
         #we will be adding it automatically to the list of known hosts
         client.load_host_keys(os.path.expanduser(os.path.join(CommandMng.tester_home, ".ssh", "known_hosts")))
+        print "Check point B"
 
         client.connect(ce_host, username=admin_name, key_filename=CommandMng.tester_home+"/.ssh/id_rsa")
+        print "Check point C"
  
         print "running '%s'" % command
         ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(command)
@@ -127,7 +129,7 @@ class CommandMng():
         print "Command %s on ce %s exit status: %s" % (command, ce_host, exit_status)
         if exit_status != 0 :
                 client.close()
-                raise cream_testsuite_exception.TestsuiteError("Error on command %s execution on %s" % (command, ce_host))
+                raise testsuite_exception.TestsuiteError("Error on command %s execution on %s" % (command, ce_host))
         out = ""
         err = ""
         if ssh_stdout is not None:
@@ -182,9 +184,9 @@ class Utils():
         Utils.my_admin_name = Utils.my_conf.getParam('ce_specific','cream_root_usr')
        
         if len(Utils.my_ce_host) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration") 
+            raise testsuite_exception.TestsuiteError("Mandatory parameter ce_host is empty. Check testsuite configuration") 
         if len(Utils.my_admin_name) == 0:
-            raise cream_testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
+            raise testsuite_exception.TestsuiteError("Mandatory parameter cream_root_usr is empty. Check testsuite configuration")
 
 
     def check_param_in_conf_file(self, conf_f, param_to_check):
@@ -214,7 +216,7 @@ class Utils():
             print "Error opening file " + conf_f
             self.my_log.error("Error opening file " + conf_f)
             self.my_log.error(exc)
-            raise cream_testsuite_exception.TestsuiteError("Error opening file " + conf_f)
+            raise testsuite_exception.TestsuiteError("Error opening file " + conf_f)
 
         in_line = in_file.readline()
         while in_line:
@@ -244,16 +246,22 @@ class Utils():
         if param_row != "":
 
             if m == None:
+                print "NOT INITIALIZED 1"
                 return ret_val[2], param_value.strip()  # NOT INITIALIZED
             else:
+                print "FOUND"
                 m = m.group(0)
                 self.my_log.debug("Parameter value = __" + m.strip() + "__")
+                print "Parameter value = __" + m.strip() + "__"
                 if m == "" or m == "\n" :
+                    print "NOT INITIALIZED 2"
                     return ret_val[2], param_value.strip() # NOT INITIALIZED
                 else:
                     param_value = m
+                    print "INITIALIZED return " + ret_val[0] + " " + param_value.strip()
                     return ret_val[0], param_value.strip()  # INITIALIZED
         else:
+            print "NOT PRESENT"
             return ret_val[1], param_value.strip() # NOT PRESENT
 
 
@@ -399,7 +407,7 @@ class Utils():
         print "Local file to be opened : " + local_file
         if len(local_file) == 0:
             print "File " + local_file + " NOT FOUND on " + self.ce_host
-            raise cream_testsuite_exception.TestsuiteError("File " + local_file + " NOT FOUND on " + self.ce_host)
+            raise testsuite_exception.TestsuiteError("File " + local_file + " NOT FOUND on " + self.ce_host)
 
         print "File name = " + local_file
         self.my_log.debug("File name = " + local_file)
@@ -409,7 +417,7 @@ class Utils():
             self.my_log.error("Error opening file " + local_file)
             print "Error opening file " + local_file
             self.my_log.error(exc)
-            raise cream_testsuite_exception.TestsuiteError("Error opening file " + local_file)
+            raise testsuite_exception.TestsuiteError("Error opening file " + local_file)
 
         return in_file
 
