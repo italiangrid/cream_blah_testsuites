@@ -55,7 +55,8 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">Documentation</td>
-<td class="colspan4" colspan="4">Regression test of bug #87492 CREAM doesn't handle correctly the jdl attribute "environment".\n\nTest Description:\nhttp://wiki.italiangrid.it/twiki/bin/view/CREAM/RegressionTestWorkPlan#Bug_87492_CREAM_doesn_t_handle_c\n\nTo test the fix, submit the following JDL using glite-ce-job-submit:\n\nEnvironment = {\n"GANGA_LCG_VO='camont:/camont/Role=lcgadmin'",\n"LFC_HOST='lfc0448.gridpp.rl.ac.uk'",\n"GANGA_LOG_HANDLER='WMS'"\n}; \nexecutable="/bin/env";\nstdoutput="out.out";\noutputsandbox={"out.out"};\noutputsandboxbasedesturi="gsiftp://localhost";\n\nWhen the job is done, retrieve the output and check that in out.out the variables GANGA_LCG_VO, LFC_HOST and GANGA_LOG_HANDLER have exactly the values defined in the JDL. \n\n\nSavannah bug reference:\nhttps://savannah.cern.ch/bugs/?87492\n\nRelevant CREAM task where released (task #24022: CREAM v. 1.13.3):\nhttps://savannah.cern.ch/task/?24022\n</td>
+<td class="colspan4" colspan="4">Regression test of isuue CREAM-111 Wrong tokenization for epilogue argument list \n\nTest Description and bug reference:\nhttps://issues.infn.it/jira/browse/CREAM-111\n\nProcess the following jdl:\n\n[\nexecutable="/bin/sleep";\narguments="15";\ninputsandbox={\n<br>
+   "<a href="gsiftp://****.pd.infn.it/tmp/epilogue.sh&quot;\n};\noutputsandbox={\n">gsiftp://****.pd.infn.it/tmp/epilogue.sh&quot;\n};\noutputsandbox={\n</a>    "*.txt"\n};\noutputsandboxbasedesturi="gsiftp://***.pd.infn.it/tmp";\nepilogue="epilogue.sh";\nepiloguearguments="A B";\n]\n\nwhere the script for the epilogue is:\n\n#!/bin/bash\n\necho "arg1 = $1" &gt; epilogue.txt\necho "arg2 = $2" &gt;&gt; epilogue.txt\n\nVerify that the file epilogue.txt contains:\n\narg1 = A\narg2 = B\n\n\nRelevant CREAM task where released:\nhttps://issues.infn.it/jira/browse/CREAM/fixforversion/11210\n</td>
 </tr>
 <tr>
 <td class="name">Metadata</td>
