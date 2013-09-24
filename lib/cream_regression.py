@@ -85,6 +85,7 @@ Implemente methods enumeration:
 
 import subprocess , shlex , os , sys , time , datetime, re , string , paramiko
 from string import Template
+import testsuite_exception
 import batch_sys_mng, cream_testing, testsuite_utils, cream_config_layout_mng, cream_testsuite_conf, mysql_mng
 import regression_vars
 import MySQLdb as mdb
@@ -421,6 +422,52 @@ def create_jdl_87492(vo, output_dir):
 
     return jdl_path
 
+#############################################################################################################################
+##############################################################################################################################
+def create_jdl_CREAM_111(output_dir):
+    '''
+        | Description:    | Create a jdl specific to test issue CREAM_111                           |
+        | Arguments:      |   output_dir   |   the directory to put the file in                     | 
+        | Returns:        | The created jdl path                                                    |
+        | Exceptions:     |                                                                         |
+    '''
+
+    folder = output_dir
+
+    epilogue_name = 'issue_cream_111_epilogue.sh'
+    jdl_identifier = 'issue_CREAM_111'
+    jdl_name = 'cream_regression-' + str(time.time()) + '-' + jdl_identifier + '.jdl'
+    jdl_path = folder + '/' + jdl_name
+    jdl_file = open(jdl_path,'w')
+
+    jdl_content =  '[\n'\
+                   'executable="/bin/sleep";\n'\
+                   'arguments="15";\n'\
+                   'inputsandbox={\n'\
+                   '    "file://' + folder + '/' + epilogue_name + '"\n'\
+                   '};\n'\
+                   'outputsandbox={\n'\
+                   '    "epilogue.txt"\n'\
+                   '};\n'\
+                   'outputsandboxbasedesturi="gsiftp://localhost";\n'\
+                   'epilogue="' + epilogue_name + '";\n'\
+                   'epiloguearguments="A B";\n'\
+                   ']\n'
+
+    jdl_file.write(jdl_content)
+    jdl_file.close()
+
+    epilogue_path = folder + '/' + epilogue_name
+    epilogue_file = open(epilogue_path,'w')
+
+    epilogue_content = '#!/bin/bash\n'\
+                       'echo "arg1 = $1" > epilogue.txt\n'\
+                       'echo "arg2 = $2" >> epilogue.txt\n'
+
+    epilogue_file.write(epilogue_content)
+    epilogue_file.close()
+
+    return jdl_path
 
 #############################################################################################################################
 #############################################################################################################################
@@ -459,6 +506,51 @@ def check_job_out_87492(job_output_location):
         return ret_val[1]
     else:
         return ret_val[0]
+
+#############################################################################################################################
+def check_job_out_CREAM_111(job_output_location):
+    '''
+        | Description:    | Receive job output as input and checks if it contains                   |
+        |                 | expected variables with expected values                                 |
+        | Arguments:      | string | job output location                                            |
+        | Returns:        | check result                                                            |
+        | Exceptions:     |                                                                         |
+    '''
+
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+
+    job_out_file = job_output_location + "/epilogue.txt"
+
+    content = ""
+    with open(job_out_file, 'r') as content_file:
+        content = content_file.read()
+
+    print content
+
+    check1 = False
+    check2 = False
+            
+    res = re.search("arg1 = A", content)
+    if res:
+        print 'Match found: ', res.group()
+        check1 = True
+    else:
+        print 'No match found for arg1 = A'
+        check1 = False
+
+    res = re.search("arg2 = B", content)
+    if res:
+        print 'Match found: ', res.group()
+        check2 = True
+    else:
+        print 'No match found for arg2 = B'
+        check2 = False
+
+    print "Check values: check1 = " + str(check1) + " ------ check2 = " + str(check2)
+    if (check1 and check2):
+        return ret_val[0]
+    else:
+        return ret_val[1]
 
 #############################################################################################################################
 #############################################################################################################################
@@ -983,6 +1075,9 @@ def check_cream_dynamic_info(ce_host):
 
     ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
 
+    my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+    ce_host = my_conf.getParam('submission_info','ce_host')
+
     #com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs | grep -i 444444"
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs "
 
@@ -1065,7 +1160,31 @@ def check_cream_dynamic_info(ce_host):
     
     '''
 
-    ret_val
+    ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
+
+    #com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs | grep -i 444444"
+    com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=grid | grep -i GlueCEStateWaitingJobs "
+
+    my_utility = testsuite_utils.CommandMng()
+
+    output, ret_code = my_utility.exec_command_os(com)
+
+    if ret_code == 0:
+
+        if len(output) == 0:
+            print "Match for GlueCEStateWaitingJobs not found in ldapsearch. Something goes wrong"
+            return ret_val[1]
+
+        else:
+            exp = re.compile("444444")
+            res = exp.match(output)
+            if res:
+                print 'Match FOUND: ', res.group()
+                return ret_val[1]
+            else:
+                print "444444 NOT FOUND in " + com + " output"
+                return ret_val[0]
+
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -1080,7 +1199,8 @@ def check_bug_83338(use_cemon_val):
        | Exceptions:  |                                                                             |
     '''
     ret_val = ['CHECK SUCCESSFUL', 'CHECK FAILED']
-   
+    res = ""
+  
     my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
     ce_host = my_conf.getParam('submission_info','ce_host')
 
@@ -1108,24 +1228,25 @@ def check_bug_83338(use_cemon_val):
             if (use_cemon_val == "true"):
                 if endpoint_type == '3':
                     print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
-                    return ret_val[0]
+                    ret = ret_val[0]
                 else:
                     print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
-                    return ret_val[1]
+                    ret = ret_val[1]
             else:
                 if (use_cemon_val == "false"):
                     if endpoint_type == '2':
                         print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[0])
-                        return ret_val[0]
+                        ret = ret_val[0]
                     else:
                         print " use_cemon=%s endpointtype=%s ret_val=%s" % (use_cemon_val, endpoint_type, ret_val[1])
-                        return ret_val[1]
+                        ret = ret_val[1]
                 else:
                     raise _error("Unknown value use_cemon=%s" % use_cemon_val)
 
         print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
+        ret = ret_val[1]
 
-        return ret_val[1]
+        return ret
 
 #############################################################################################################################
 ##############################################################################################################################
@@ -1230,51 +1351,51 @@ def check_bug_59871():
 
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b mds-vo-name=resource,o=grid | grep -i GlueHostApplicationSoftwareRunTimeEnvironment"
 
-    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "mds-vo-name=resource,o=grid"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p1.wait()
-    p2 = subprocess.Popen(["grep", "-i", "GlueHostApplicationSoftwareRunTimeEnvironment"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    p1.stdout.close()
+    my_utility = testsuite_utils.CommandMng()
+    output, ret_code = my_utility.exec_command_os(com)
 
-    p2.wait()
+    if ret_code == 0:
 
-    fPtr=p2.stdout
-    output=fPtr.readlines()
-    output=" ".join(output)
+        if len(output) == 0:
+            raise _error("'" + com  + "'" + "Failed: output empty")
 
-    fPtrErr1=p1.stderr
-    error=fPtrErr1.readlines()
-    error=" ".join(error)
+        else:
+            print "Risultato di ldapsearch:"
+            print output
 
-    if len(error) != 0:
-        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
+            check_result = "OK"
+            res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag1", output)
+            if res:
+                print 'Match found: ', res.group()
+            else:
+                print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag1'
+                check_result = "KO"
 
-    if len(output) == 0:
-        raise _error("'" + com  + "'" + "Failed: output empty")
+            res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag2", output)
+            if res:
+                print 'Match found: ', res.group()
+            else:
+                print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag2'
+                check_result = "KO"
 
-    print "Risultato di ldapsearch:"
-    print output
+            res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag3", output)
+            if res:
+                print 'Match found: ', res.group()
+            else:
+                print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag3'
+                check_result = "KO"
 
-    check_result = "OK"
-    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag1", output)
-    if res:
-        print 'Match found: ', res.group()
-    else:
-        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag1'
+
+    elif ret_code == 1:
+        print "Match for GlueHostApplicationSoftwareRunTimeEnvironment not found in" 
+        print com
+        print "Bug not fixed."
         check_result = "KO"
 
-    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag2", output)
-    if res:
-        print 'Match found: ', res.group()
     else:
-        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag2'
-        check_result = "KO"
-
-    res = re.search("GlueHostApplicationSoftwareRunTimeEnvironment: tag3", output)
-    if res:
-        print 'Match found: ', res.group()
-    else:
-        print 'No match found for GlueHostApplicationSoftwareRunTimeEnvironment: tag3'
-        check_result = "KO"
+        print "Error executing command " + com
+        print "error code = " + str(ret_code)
+        raise _error("Error executing command %s" % com)
 
     print "check_bug_59871 result = " + check_result
     return check_result
@@ -1300,56 +1421,53 @@ def check_bug_96306():
 
     com = "ldapsearch -h " + ce_host + " -x -p 2170 -b o=glue"
 
-    p1 = subprocess.Popen(["ldapsearch", "-h", ce_host, "-x", "-p", "2170", "-b", "o=glue"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p1.wait()
+    print com
 
-    fPtr=p1.stdout
-    output=fPtr.readlines()
-    output=" ".join(output)
+    my_utility = testsuite_utils.CommandMng()
 
-    fPtrErr1=p1.stderr
-    error=fPtrErr1.readlines()
-    error=" ".join(error)
+#    output, error = my_utility.exec_remote_command(com)
 
-    if error != None and len(error) != 0:
-        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
-
-    if output == None or len(output) == 0:
-        raise _error("'" + com  + "'" + "Failed: output empty")
-
-    print "Result of ldapsearch:"
-    print output
+#    if error != None and len(error) != 0:
+#        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
+#
+#    if output == None or len(output) == 0:
+#        raise _error("'" + com  + "'" + "Failed: output empty")
+#
+#    print "Output of ldapsearch:"
+#    print output
+#    print "Error of ldapsearch:"
+#    print error
 
     test_res = ret_val[1]
-
-    # First search
-    ex = re.compile("GLUE2ApplicationEnvironmentID: TESTTAG")
-    search_res = ex.search(output)
-
-    if search_res is None:
-        print "GLUE2ApplicationEnvironmentID: TESTTAG NOT found in output of " + com
-        test_res = ret_val[1]
-    else:
-        print "GLUE2ApplicationEnvironmentID: TESTTAG found in output of " + com
-        test_res = ret_val[0]
-
-        search_res = search_res.group()
-        print "case sensitive search of GLUE2ApplicationEnvironmentID: TESTTAG result = %s" % search_res
-
-    # Second search
-    ex = re.compile("GLUE2ApplicationEnvironmentAppName: TESTTAG")
-    search_res = ex.search(output)
-
-    if search_res is None:
-        print "GLUE2ApplicationEnvironmentAppName: TESTTAG NOT found in output of " + com
-        test_res = ret_val[1]
-    else:
-        print "GLUE2ApplicationEnvironmentAppName: TESTTAG found in output of " + com
-        test_res = ret_val[0]
-
-        search_res = search_res.group()
-        print "case sensitive search of GLUE2ApplicationEnvironmentAppName: TESTTAG result = %s" % search_res
-
+#
+#    # First search
+#    ex = re.compile("GLUE2ApplicationEnvironmentID: TESTTAG")
+#    search_res = ex.search(output)
+#
+#    if search_res is None:
+#        print "GLUE2ApplicationEnvironmentID: TESTTAG NOT found in output of " + com
+#        test_res = ret_val[1]
+#    else:
+#        print "GLUE2ApplicationEnvironmentID: TESTTAG found in output of " + com
+#        test_res = ret_val[0]
+#
+#        search_res = search_res.group()
+#        print "case sensitive search of GLUE2ApplicationEnvironmentID: TESTTAG result = %s" % search_res
+#
+#    # Second search
+#    ex = re.compile("GLUE2ApplicationEnvironmentAppName: TESTTAG")
+#    search_res = ex.search(output)
+#
+#    if search_res is None:
+#        print "GLUE2ApplicationEnvironmentAppName: TESTTAG NOT found in output of " + com
+#        test_res = ret_val[1]
+#    else:
+#        print "GLUE2ApplicationEnvironmentAppName: TESTTAG found in output of " + com
+#        test_res = ret_val[0]
+#
+#        search_res = search_res.group()
+#        print "case sensitive search of GLUE2ApplicationEnvironmentAppName: TESTTAG result = %s" % search_res
+#
     return test_res
 
 
@@ -1376,7 +1494,7 @@ def check_bug_87361(config_file, cream_concurrency_level_val):
     except Exception as exc:
         print "Error opening file " + config_file
         self.my_log.error(exc)
-        raise cream_testsuite_exception.CreamTestsuiteError("Error opening file " + config_file)
+        raise testsuite_exception.CreamTestsuiteError("Error opening file " + config_file)
 
     # Configure the xml tag (tag_to_search) to search depending on EMI version
     str_to_search = regression_vars.cream_concurrency_level + "=\"" + str(cream_concurrency_level_val) +"\""
