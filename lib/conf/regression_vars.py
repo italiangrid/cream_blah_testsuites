@@ -203,8 +203,8 @@ class _error(Exception):
         def __str__(self):
                 return str(self.string)
 
-if batch_system != "pbs" and batch_system != "lsf":
-        raise _error('Batch system must be either "pbs" or "lsf". You entered: ' + batch_system)
+if batch_system != "pbs" and batch_system != "lsf" and batch_system != "slurm":
+        raise _error('Batch system must be either "pbs" or "lsf" or "slurm". You entered: ' + batch_system)
 
 if log_level != "NONE" and log_level != "FAIL" and log_level != "WARN" and log_level != "INFO" and log_level != "DEBUG" and log_level != "TRACE":
         raise _error('Log level must be one of: NONE FAIL WARN INFO DEBUG TRACE. You entered: ' + log_level)
