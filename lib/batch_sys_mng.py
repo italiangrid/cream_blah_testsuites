@@ -1,6 +1,7 @@
 import paramiko, re
 import logging
 import cream_testsuite_conf
+import testsuite_utils
 
 class BatchSysMngError(Exception):
     """ Abstract Class to manage exception of batch system management module."""
@@ -199,6 +200,72 @@ class PBSBatchSys(AbstractBatchSystem):
 
         return torque_jid
 
+################################
+## SLURMBatchSys                ##
+################################
+
+class SLURMBatchSys(AbstractBatchSystem):
+    """Class to manage SLURM-Torque batch systems"""
+
+    my_utility = testsuite_utils.CommandMng()
+  
+    def __init__(self):
+
+        self.my_log = logging.getLogger('SLURMBatchSys')
+        self.my_conf = cream_testsuite_conf.CreamTestsuiteConfSingleton()
+        self.slurm_host = self.my_conf.getParam('batch_system','batch_master_host')
+        print "slurm_host " + self.slurm_host
+
+# Public interface
+
+    #def __del__(self):
+
+    def del_job_from_batch_id(self, slurm_jid):
+
+        stdout, stderr = self.my_utility.exec_remote_command("scancel " + slurm_jid)
+
+        error = stderr
+        if error != "":
+            raise BatchCmdError(error)
+       
+        print "Cream job with slurm jid " + slurm_jid + " has been deleted!"
+
+
+    def del_job_from_cream_id(self, cream_id):
+        
+        slurm_job_id = self.get_batch_jid_from_cream_jid(cream_id)
+        self.del_job_from_batch_id(slurm_job_id)       
+
+# Private functions
+
+    def get_batch_jid_from_cream_jid(self, cream_id):
+
+        print "CREAM Job ID is: " + cream_id
+        cream_num_jid = cream_id.split("CREAM")[1]
+        print "CREAM Numeric Job Identifier is: " + cream_num_jid
+
+        print "Verify if job " + cream_num_jid + " exists using squeue"
+        stdout, stderr = self.my_utility.exec_remote_command("squeue -o \"%i %a %j\"")
+
+        error = stderr
+        if stderr != "":
+            print "self.my_utility.exec_remote_command(\"squeue -o \\\"%i %a %j\\\"\") returns error!"
+            raise BatchCmdError(error)
+
+        output = stdout
+        slurm_jid = "not_set"
+        for line in output.split('\n'):
+                if cream_num_jid in line:
+                        slurm_jid = line.split(' ')[0]
+                        print "slurm jid is: " + slurm_jid
+        
+        if slurm_jid is "not_set":
+                print "SLURM ID not found"
+                raise JobNotFoundError("Cream job with jid " + cream_id + " has not been found on the SLURM server! (squeue didn't report it)")
+
+        print "Return slurm id = " + slurm_jid
+        return slurm_jid
+
 
 ################################
 ## BatchSystemFactory         ##
@@ -221,5 +288,10 @@ class BatchSystemFactory:
             print "Get batch sys mng for %s" % self.batch_sys 
             my_batch_sys = PBSBatchSys()
             return my_batch_sys
+        elif self.batch_sys == "slurm":
+            print "Get batch sys mng for %s" % self.batch_sys
+            my_batch_sys = SLURMBatchSys()
+            return my_batch_sys
+
 
         return batch_sys + "batch system not supported"
