@@ -277,15 +277,14 @@ class Utils():
       
         ce_host = Utils.my_ce_host
         admin_name = Utils.my_admin_name
-
         localpath = ""
         ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #In case the server's key is unknown,
         #we will be adding it automatically to the list of known hosts
         ssh.load_host_keys(os.path.expanduser(os.path.join(Utils.tester_home, ".ssh", "known_hosts")))
-
         ssh.connect(ce_host, username=admin_name,  key_filename=Utils.tester_home+"/.ssh/id_rsa")
+
         ftp = ssh.open_sftp()
         try:
             ftp.stat(file_to_get)
