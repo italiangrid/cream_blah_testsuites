@@ -911,7 +911,10 @@ def configure_ce_by_yaim(site_info_file):
     if batch_sys == "lsf":
         command = command + " -n LSF_utils"
 
-    if (batch_sys != "pbs") and (batch_sys != "lsf"):
+    if batch_sys == "slurm":
+        command = command + " -n SLURM_utils"
+
+    if (batch_sys != "pbs") and (batch_sys != "lsf") and (batch_sys != "slurm"):
         raise  _error("Batch system %s is NOT supported" % batch_sys)
     
     print "Exec remote command: " + command
@@ -1244,7 +1247,6 @@ def check_bug_83338(use_cemon_val):
                     raise _error("Unknown value use_cemon=%s" % use_cemon_val)
 
         print " use_cemon=%s endpointtype=%s " % (use_cemon_val, endpoint_type)
-        ret = ret_val[1]
 
         return ret
 
@@ -1425,49 +1427,47 @@ def check_bug_96306():
 
     my_utility = testsuite_utils.CommandMng()
 
-#    output, error = my_utility.exec_remote_command(com)
+    output, error = my_utility.exec_remote_command(com)
 
-#    if error != None and len(error) != 0:
-#        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
-#
-#    if output == None or len(output) == 0:
-#        raise _error("'" + com  + "'" + "Failed: output empty")
-#
-#    print "Output of ldapsearch:"
-#    print output
-#    print "Error of ldapsearch:"
-#    print error
+    if error != None and len(error) != 0:
+        raise _error("`" + com + "`" + "\ncommand failed \nCommand reported: " +  error)
 
-    test_res = ret_val[1]
-#
-#    # First search
-#    ex = re.compile("GLUE2ApplicationEnvironmentID: TESTTAG")
-#    search_res = ex.search(output)
-#
-#    if search_res is None:
-#        print "GLUE2ApplicationEnvironmentID: TESTTAG NOT found in output of " + com
-#        test_res = ret_val[1]
-#    else:
-#        print "GLUE2ApplicationEnvironmentID: TESTTAG found in output of " + com
-#        test_res = ret_val[0]
-#
-#        search_res = search_res.group()
-#        print "case sensitive search of GLUE2ApplicationEnvironmentID: TESTTAG result = %s" % search_res
-#
-#    # Second search
-#    ex = re.compile("GLUE2ApplicationEnvironmentAppName: TESTTAG")
-#    search_res = ex.search(output)
-#
-#    if search_res is None:
-#        print "GLUE2ApplicationEnvironmentAppName: TESTTAG NOT found in output of " + com
-#        test_res = ret_val[1]
-#    else:
-#        print "GLUE2ApplicationEnvironmentAppName: TESTTAG found in output of " + com
-#        test_res = ret_val[0]
-#
-#        search_res = search_res.group()
-#        print "case sensitive search of GLUE2ApplicationEnvironmentAppName: TESTTAG result = %s" % search_res
-#
+    if output == None or len(output) == 0:
+        raise _error("'" + com  + "'" + "Failed: output empty")
+
+    print "Output of ldapsearch:"
+    print output
+    print "Error of ldapsearch:"
+    print error
+
+    # First search
+    ex = re.compile("GLUE2ApplicationEnvironmentID: TESTTAG")
+    search_res = ex.search(output)
+
+    if search_res is None:
+        print "GLUE2ApplicationEnvironmentID: TESTTAG NOT found in output of " + com
+        test_res = ret_val[1]
+    else:
+        print "GLUE2ApplicationEnvironmentID: TESTTAG found in output of " + com
+        test_res = ret_val[0]
+
+        search_res = search_res.group()
+        print "case sensitive search of GLUE2ApplicationEnvironmentID: TESTTAG result = %s" % search_res
+
+    # Second search
+    ex = re.compile("GLUE2ApplicationEnvironmentAppName: TESTTAG")
+    search_res = ex.search(output)
+
+    if search_res is None:
+        print "GLUE2ApplicationEnvironmentAppName: TESTTAG NOT found in output of " + com
+        test_res = ret_val[1]
+    else:
+        print "GLUE2ApplicationEnvironmentAppName: TESTTAG found in output of " + com
+        test_res = ret_val[0]
+
+        search_res = search_res.group()
+        print "case sensitive search of GLUE2ApplicationEnvironmentAppName: TESTTAG result = %s" % search_res
+
     return test_res
 
 
