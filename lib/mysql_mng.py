@@ -47,7 +47,7 @@ class MysqlMng():
         with con:
 
             cur = con.cursor()
-            select_cmd = "SELECT " + clause + " FROM " + table_name
+            select_cmd = "SELECT " + clause + " FROM " + table_name + ";"
             print "select command:"
             print select_cmd
             cur.execute(select_cmd)
